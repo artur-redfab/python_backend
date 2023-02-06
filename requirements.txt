@@ -97,3 +97,4 @@ Werkzeug==2.2.2
 wheel==0.37.1
 win10toast==0.9
 zipp==3.11.0
+python_decouple==3.7
