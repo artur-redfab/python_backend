@@ -22,9 +22,17 @@ class ColorCreate(Base):
     pass
 
 
+# class ColorUpdate(Base):
+#     __tablename__ = "colors"
+#     pass
+
 class ColorUpdate(Base):
     __tablename__ = "colors"
-    pass
+    name: str
+    additionalCleaning: bool
+
+    class Config:
+        orm_mode = True
 
 
 # Модель Users

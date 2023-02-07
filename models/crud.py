@@ -20,12 +20,17 @@ def create_color(db: Session, color: schemas.ColorCreate):
     return db_color
 
 
-def set_color(db: Session, id: int):
-    db_color = db.query(models.Color).filter(models.Color.id == id).first()
-    db_color.update({'name': '12345'})
+# def set_color(db: Session, id: int):
+#     db_color = db.query(models.Color).filter(models.Color.id == id).first()
+#     db_color.update({'name': '12345'})
+#     db.commit()
+#     # db.refresh(db_color)
+#     return db_color
+
+def set_color(db: Session, id: int, name: str):
+    update_color = db.query(models.Color).filter(models.Color.id == id).first()
+    update_color.name = name
     db.commit()
-    # db.refresh(db_color)
-    return db_color
 
 
 def get_features(id: int, db: Session):
