@@ -42,4 +42,4 @@ class Users(Base):
     login = Column(String)
     passwordHash = Column(String)
     markingDeletion = Column(Boolean, default=False)
-gi
+
