@@ -124,7 +124,7 @@ def log_in(login: str, passwordHash: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail='Ошибка выполнения, неверный логин или пароль')
     else:
         return crud.get_users(db=db)
-
+#check test task
 
 if __name__ == "__main__":
     uvicorn.run(app, host='127.0.0.1', port=8005)
