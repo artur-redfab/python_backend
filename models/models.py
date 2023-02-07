@@ -25,3 +25,21 @@ class ColorCreate(Base):
 class ColorUpdate(Base):
     __tablename__ = "colors"
     pass
+
+
+# Модель Users
+# - Нет понимания корректой инициализации полей модели
+# - Что делать с хэш-паролем
+class Users(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String)
+    firstname = Column(String)
+    # Связано с таблицей roles. Будет ли это внешний ключ?
+    idRole = Column(String)
+    position = Column(String)
+    login = Column(String)
+    passwordHash = Column(String)
+    markingDeletion = Column(Boolean, default=False)
+gi
