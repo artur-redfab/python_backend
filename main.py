@@ -31,12 +31,13 @@ def create_color(color: schemas.ColorCreate, db: Session = Depends(get_db)):
     return crud.create_color(db=db)
 
 
-@app.put("/hs/color/change/{id}", response_model=schemas.Color)
-def change_color(color: schemas.ColorCreate, db: Session = Depends(get_db)):
-    db_color = crud.get_colors(db)
-    if db_color:
-        raise HTTPException(status_code=400, detail="Color already registered")
-    return crud.create_color(db=db)
+@app.patch("/hs/color/change/{id}", response_model=schemas.ColorUpdate)
+def change_color(id: int, color: schemas.ColorUpdate, db: Session = Depends(get_db)):
+    db_color = crud.get_color(db, id=id)
+    if not db_color:
+        raise HTTPException(status_code=400, detail="Color not found!")
+    crud.set_color(db=db, id=id, name=color.name)
+    return crud.get_color(db=db, id=id)
 
 
 @app.delete("/hs/color/delete/{id}", response_model=schemas.Color)
@@ -67,4 +68,3 @@ def create_color(id: int, db: Session = Depends(get_db)):
     if db_color:
         raise HTTPException(status_code=400, detail="Color already registered")
     return crud.create_color(db=db)
-

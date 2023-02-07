@@ -10,9 +10,12 @@ class ColorCreate(ColorBase):
     pass
 
 
-class ColorUpdate(BaseModel):
+class ColorUpdate(ColorBase):
     name: str | None = None
     additionalCleaning: str | None = None
+
+    class Config:
+        orm_mode = True
 
 
 class Color(ColorBase):
