@@ -126,6 +126,11 @@ def log_in(login: str, passwordHash: str, db: Session = Depends(get_db)):
     else:
         return crud.get_users(db=db)
 
+# Тест таблиц
+@app.get("/test/roles")
+def get_roles_list(db: Session = Depends(get_db)):
+    return db.query(models.Roles).all()
+
 
 if __name__ == "__main__":
     uvicorn.run(app, host='127.0.0.1', port=8005)
