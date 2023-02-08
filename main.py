@@ -82,13 +82,14 @@ def create_user(user: schemas.User, db: Session = Depends(get_db)):
     return crud.create_user(db=db, user=user)
 
 
-@app.put("/hs/user/change/{id}")
+@app.put("/hs/user/change/{id}", status_code=200)
 def change_user(id: int, user: schemas.User, db: Session = Depends(get_db)):
     db_user = crud.get_user_by_id(user_id=id, db=db)
     if db_user is None:
         raise HTTPException(status_code=404, detail='По GUID не найден')
     else:
         crud.change_user(db=db, user_id=id, new_user_data=user)
+        return {"message": "Изменен"}
 
 
 @app.delete("/hs/user/delete/{id}", status_code=200)

@@ -96,10 +96,11 @@ def get_users_role_list(db: Session):
 
 
 def change_user(db: Session, user_id: int, new_user_data: schemas.User):
+    passwordHash = str(hashlib.md5(str.encode(new_user_data.password, encoding='utf-8')).hexdigest())
     db_user = get_user_by_id(db=db, user_id=user_id)
     db_user.name = new_user_data.name
     db_user.idRole = new_user_data.idRole
-    db_user.password = new_user_data.password
+    db_user.passwordHash = passwordHash
     db_user.position = new_user_data.position
     db_user.firstname = new_user_data.firstname
     db_user.login = new_user_data.login
