@@ -1,10 +1,14 @@
+from datetime import datetime
+
 import uvicorn
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Response, Cookie
 from sqlalchemy.orm import Session
 from models import crud
 from models import schemas, models
 from models.database import SessionLocal, engine
 import hashlib
+from decouple import config
+from datetime import datetime, timedelta
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
@@ -120,13 +124,36 @@ def get_users_role_list(db: Session = Depends(get_db)):
 
 
 @app.post("/hs/user/login")
-def auth(login: str, password: str, db: Session = Depends(get_db)):
+def login(response: Response, login: str, password: str, db: Session = Depends(get_db)):
     db_user = crud.get_user_by_login(db=db, login=login)
     passwordHash = hashlib.md5(str.encode(password, encoding='utf-8')).hexdigest()
     if not db_user or db_user.passwordHash != passwordHash:
         raise HTTPException(status_code=400, detail='Ошибка выполнения, неверный логин или пароль')
     else:
-        return crud.get_users(db=db)
+        response.set_cookie(
+            key="login",
+            value=db_user.login,
+            expires=2689200 # 31 days in second + 3 hours(error) = 2689200 sec
+        )
+        return crud.get_users(db=db, user_id=db_user.id)
+
+
+@app.post("/hs/user/logout")
+def logout(response: Response, login: str | None = Cookie(default=None)):
+    if not login:
+        return {"message": "Вы не в системе!"}
+    else:
+        response.delete_cookie(login)
+        return {"message": f"{login} вышел из системы"}
+
+
+@app.get("/hs/user/current")
+def get_current_user(login: str | None = Cookie(default=None), db: Session = Depends(get_db)):
+    user_db = crud.get_user_by_login(db=db, login=login)
+    if not user_db:
+        return {"message": "Пользователь не вошел в систему или не существует"}
+    else:
+        return crud.get_users(db=db, user_id=user_db.id)
 
 
 @app.get("/hs/user/features/{id}")

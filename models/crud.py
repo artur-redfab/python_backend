@@ -67,14 +67,23 @@ def get_user_by_login(db: Session, login: str):
 
 
 # Уточнить по универсальности метода, он возвращает не все поля БД
-def get_users(db: Session):
-    db_users = db.query(
-        models.Users.id,
-        models.Users.name,
-        models.Users.login,
-        models.Users.idRole,
-        models.Users.markingDeletion
-    ).order_by(models.Users.id).all()
+def get_users(db: Session, user_id=None):
+    if user_id:
+        db_users = db.query(
+            models.Users.id,
+            models.Users.name,
+            models.Users.login,
+            models.Users.idRole,
+            models.Users.markingDeletion
+        ).filter(models.Users.id == user_id).all()
+    else:
+        db_users = db.query(
+            models.Users.id,
+            models.Users.name,
+            models.Users.login,
+            models.Users.idRole,
+            models.Users.markingDeletion
+        ).order_by(models.Users.id).all()
     return db_users
 
 
