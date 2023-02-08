@@ -1,3 +1,5 @@
+import hashlib
+
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
@@ -39,17 +41,19 @@ def get_features(id: int, db: Session):
 
 # методы для работы с моделью Users
 def create_user(db: Session, user: schemas.User):
+    passwordHash = str(hashlib.md5(str.encode(user.password, encoding='utf-8')).hexdigest())
     db_user = models.Users(
         name=user.name,
         firstname=user.firstname,
         login=user.login,
-        passwordHash=user.password,
+        passwordHash=passwordHash,
         idRole=user.idRole,
         position=user.position
     )
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
+    return db_user
 
 
 def get_user_by_id(db: Session, user_id: int):

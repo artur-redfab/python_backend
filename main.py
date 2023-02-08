@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from models import crud
 from models import schemas, models
 from models.database import SessionLocal, engine
+import hashlib
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
@@ -74,7 +75,7 @@ def create_color(id: int, db: Session = Depends(get_db)):
 # users api
 @app.post("/hs/user/create", response_model=schemas.UserBase)
 def create_user(user: schemas.User, db: Session = Depends(get_db)):
-    crud.create_user(db=db, user=user)
+    return crud.create_user(db=db, user=user)
 
 
 @app.put("/hs/user/change/{id}")
@@ -119,8 +120,9 @@ def get_users_role_list(db: Session = Depends(get_db)):
 
 
 @app.post("/hs/user/login")
-def log_in(login: str, passwordHash: str, db: Session = Depends(get_db)):
+def auth(login: str, password: str, db: Session = Depends(get_db)):
     db_user = crud.get_user_by_login(db=db, login=login)
+    passwordHash = hashlib.md5(str.encode(password, encoding='utf-8')).hexdigest()
     if not db_user or db_user.passwordHash != passwordHash:
         raise HTTPException(status_code=400, detail='Ошибка выполнения, неверный логин или пароль')
     else:
