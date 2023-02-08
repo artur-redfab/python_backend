@@ -105,3 +105,16 @@ def show_user(db: Session, user_id: int):
     db.commit()
 
 
+def get_featurs_by_user_id(db: Session, user_id: int):
+    db_user = db.query(
+        models.Users.id,
+        models.Users.name,
+        models.Users.firstname,
+        models.Users.login,
+        models.Users.idRole,
+        models.Users.position,
+        models.Users.markingDeletion
+    ).filter(models.Users.id == user_id).first()
+    return db_user
+
+

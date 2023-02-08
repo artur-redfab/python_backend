@@ -126,6 +126,16 @@ def log_in(login: str, passwordHash: str, db: Session = Depends(get_db)):
     else:
         return crud.get_users(db=db)
 
+
+@app.get("/hs/user/features/{id}")
+def get_features(id: int, db: Session = Depends(get_db)):
+    db_features = crud.get_featurs_by_user_id(db=db, user_id=id)
+    if not db_features:
+        raise HTTPException(status_code=404, detail='По GUID не найден')
+    else:
+        return db_features
+
+
 # Тест таблиц
 @app.get("/test/roles")
 def get_roles_list(db: Session = Depends(get_db)):

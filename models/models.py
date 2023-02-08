@@ -36,8 +36,6 @@ class ColorUpdate(Base):
 
 
 # Модель Users
-# - Нет понимания корректой инициализации полей модели
-# - Что делать с хэш-паролем
 class Users(Base):
     __tablename__ = "users"
 
