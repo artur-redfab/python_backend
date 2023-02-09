@@ -33,3 +33,25 @@ class ColorUpdate(Base):
 
     class Config:
         orm_mode = True
+
+
+# Модель Users
+class Users(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String)
+    firstname = Column(String)
+    idRole = Column(Integer, ForeignKey("roles.id"))
+    position = Column(String)
+    login = Column(String)
+    passwordHash = Column(String)
+    markingDeletion = Column(Boolean, default=False)
+
+
+class Roles(Base):
+    __tablename__ ="roles"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String)
+
