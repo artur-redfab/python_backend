@@ -1,8 +1,5 @@
 import hashlib
-
-from sqlalchemy import text
 from sqlalchemy.orm import Session
-
 from models import schemas, models
 
 
