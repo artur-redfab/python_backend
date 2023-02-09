@@ -5,7 +5,6 @@ from models.database import engine
 from routers.color import router as color_routers
 from routers.user import router as user_routers
 
-
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
