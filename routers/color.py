@@ -2,7 +2,11 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from models import crud, schemas
 from models.database import get_db
-
+from configparser import ConfigParser
+# instantiate
+configP = ConfigParser()
+# parse existing file
+configP.read('messages.ini')
 
 router = APIRouter(
     prefix='/hs/color',
@@ -14,7 +18,7 @@ router = APIRouter(
 def create_color(color: schemas.ColorCreate, db: Session = Depends(get_db)):
     db_color = crud.get_colors(db)
     if db_color:
-        raise HTTPException(status_code=400, detail="Color already registered")
+        raise HTTPException(status_code=400, detail=configP.get('colors', 'color_already_registered'))
     return crud.create_color(db=db)
 
 
@@ -22,7 +26,7 @@ def create_color(color: schemas.ColorCreate, db: Session = Depends(get_db)):
 def change_color(id: int, color: schemas.ColorUpdate, db: Session = Depends(get_db)):
     db_color = crud.get_color(db, id=id)
     if not db_color:
-        raise HTTPException(status_code=400, detail="Color not found!")
+        raise HTTPException(status_code=400, detail=config.get('colors', 'color_already_registered'))
     crud.set_color(db=db, id=id, name=color.name)
     return crud.get_color(db=db, id=id)
 
