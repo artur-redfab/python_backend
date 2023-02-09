@@ -127,3 +127,46 @@ def get_features_by_user_id(db: Session, user_id: int):
     ).filter(models.Users.id == user_id).first()
     return db_user
 
+
+# методы для работы с моделью vacuumSystem
+def create_vacuum_system(db: Session, vs: schemas.VacuumSystemChangeCreate):
+    db_vs = models.VacuumSystem(
+        name=vs.name,
+        ip=vs.ip,
+        port=vs.port
+    )
+    db.add(db_vs)
+    db.commit()
+    db.refresh(db_vs)
+    return db_vs
+
+
+def change_vacuum_system(db: Session, new_data_vs: schemas.VacuumSystemChangeCreate, vs_id: int):
+    db_vs = db.query(models.VacuumSystem).filter(models.VacuumSystem.id == vs_id).first()
+    db_vs.name = new_data_vs.name
+    db_vs.ip = new_data_vs.ip
+    db_vs.port = new_data_vs.port
+    db.commit()
+
+
+def hide_vacuum_system(db: Session, vs_id: int):
+    db_vs = db.query(models.VacuumSystem).filter(models.VacuumSystem.id == vs_id).first()
+    db_vs.markingDelete = True
+    db.commit()
+
+
+def show_vacuum_system(db: Session, vs_id: int):
+    db_vs = db.query(models.VacuumSystem).filter(models.VacuumSystem.id == vs_id).first()
+    db_vs.markingDelete = False
+    db.commit()
+
+
+def get_list_vacuum_systems(db: Session):
+    db_vs = db.query(models.VacuumSystem).order_by(models.VacuumSystem.id).all()
+    return db_vs
+
+
+def get_features_vacuum_system_by_id(db: Session, vs_id: int):
+    db_vs = db.query(models.VacuumSystem).filtre(models.VacuumSystem.id == vs_id).first()
+    return db_vs
+
