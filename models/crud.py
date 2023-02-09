@@ -166,7 +166,7 @@ def get_list_vacuum_systems(db: Session):
     return db_vs
 
 
-def get_features_vacuum_system_by_id(db: Session, vs_id: int):
-    db_vs = db.query(models.VacuumSystem).filtre(models.VacuumSystem.id == vs_id).first()
+def get_vacuum_system_by_id(db: Session, vs_id: int):
+    db_vs = db.query(models.VacuumSystem).filter(models.VacuumSystem.id == vs_id).first()
     return db_vs
 
