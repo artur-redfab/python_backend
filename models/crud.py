@@ -63,7 +63,6 @@ def get_user_by_login(db: Session, login: str):
     return db_user
 
 
-# Уточнить по универсальности метода, он возвращает не все поля БД
 def get_users(db: Session, user_id=None):
     if user_id:
         db_users = db.query(
@@ -127,5 +126,4 @@ def get_features_by_user_id(db: Session, user_id: int):
         models.Users.markingDeletion
     ).filter(models.Users.id == user_id).first()
     return db_user
-
 

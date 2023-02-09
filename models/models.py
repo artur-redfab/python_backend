@@ -63,6 +63,6 @@ class VacuumSystem(Base):
     name = Column(String)
     ip = Column(String)
     port = Column(Integer)
-    markingDeletion = Column(Boolean)
+    markingDeletion = Column(Boolean, default=False)
 
 
