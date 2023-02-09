@@ -1,3 +1,5 @@
+import hashlib
+
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
@@ -39,17 +41,19 @@ def get_features(id: int, db: Session):
 
 # методы для работы с моделью Users
 def create_user(db: Session, user: schemas.User):
+    passwordHash = str(hashlib.md5(str.encode(user.password, encoding='utf-8')).hexdigest())
     db_user = models.Users(
         name=user.name,
         firstname=user.firstname,
         login=user.login,
-        passwordHash=user.password,
+        passwordHash=passwordHash,
         idRole=user.idRole,
         position=user.position
     )
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
+    return db_user
 
 
 def get_user_by_id(db: Session, user_id: int):
@@ -63,14 +67,23 @@ def get_user_by_login(db: Session, login: str):
 
 
 # Уточнить по универсальности метода, он возвращает не все поля БД
-def get_users(db: Session):
-    db_users = db.query(
-        models.Users.id,
-        models.Users.name,
-        models.Users.login,
-        models.Users.idRole,
-        models.Users.markingDeletion
-    ).order_by(models.Users.id).all()
+def get_users(db: Session, user_id=None):
+    if user_id:
+        db_users = db.query(
+            models.Users.id,
+            models.Users.name,
+            models.Users.login,
+            models.Users.idRole,
+            models.Users.markingDeletion
+        ).filter(models.Users.id == user_id).all()
+    else:
+        db_users = db.query(
+            models.Users.id,
+            models.Users.name,
+            models.Users.login,
+            models.Users.idRole,
+            models.Users.markingDeletion
+        ).order_by(models.Users.id).all()
     return db_users
 
 
@@ -83,10 +96,11 @@ def get_users_role_list(db: Session):
 
 
 def change_user(db: Session, user_id: int, new_user_data: schemas.User):
+    passwordHash = str(hashlib.md5(str.encode(new_user_data.password, encoding='utf-8')).hexdigest())
     db_user = get_user_by_id(db=db, user_id=user_id)
     db_user.name = new_user_data.name
     db_user.idRole = new_user_data.idRole
-    db_user.password = new_user_data.password
+    db_user.passwordHash = passwordHash
     db_user.position = new_user_data.position
     db_user.firstname = new_user_data.firstname
     db_user.login = new_user_data.login
@@ -103,5 +117,18 @@ def show_user(db: Session, user_id: int):
     db_user = get_user_by_id(db=db, user_id=user_id)
     db_user.markingDelete = False
     db.commit()
+
+
+def get_featurs_by_user_id(db: Session, user_id: int):
+    db_user = db.query(
+        models.Users.id,
+        models.Users.name,
+        models.Users.firstname,
+        models.Users.login,
+        models.Users.idRole,
+        models.Users.position,
+        models.Users.markingDeletion
+    ).filter(models.Users.id == user_id).first()
+    return db_user
 
 

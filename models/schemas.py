@@ -39,7 +39,7 @@ class User(BaseModel):
     firstname: str
     login: str
     password: str
-    idRole: str
+    idRole: int
     position: str
 
     class Config:
@@ -48,6 +48,17 @@ class User(BaseModel):
 
 class UserShowHide(BaseModel):
     markingDeletion: bool
+
+
+class UserFeatures(BaseModel):
+    id: str
+    name: str
+    firstname: str
+    login: str
+    idRole: int
+    position: str
+    markingDeletion: bool
+
 
 
 
