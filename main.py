@@ -1,11 +1,5 @@
-<<<<<<< HEAD
-from fastapi import Depends, FastAPI, HTTPException
-=======
-from datetime import datetime
-
 import uvicorn
 from fastapi import Depends, FastAPI, HTTPException, Response, Cookie
->>>>>>> b1cf4faecfb6f68e5deb3c6159ab88310ac17ec3
 from sqlalchemy.orm import Session
 from models import crud
 from models import schemas, models
@@ -13,6 +7,12 @@ from models.database import SessionLocal, engine
 import hashlib
 from decouple import config
 from datetime import datetime, timedelta
+from configparser import ConfigParser
+
+# instantiate
+config = ConfigParser()
+# parse existing file
+config.read('messages.ini')
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
@@ -37,7 +37,7 @@ async def pong():
 def create_color(color: schemas.ColorCreate, db: Session = Depends(get_db)):
     db_color = crud.get_colors(db)
     if db_color:
-        raise HTTPException(status_code=400, detail="Color already registered")
+        raise HTTPException(status_code=400, detail=config.get('colors', 'color_already_registered'))
     return crud.create_color(db=db)
 
 
@@ -45,7 +45,7 @@ def create_color(color: schemas.ColorCreate, db: Session = Depends(get_db)):
 def change_color(id: int, color: schemas.ColorUpdate, db: Session = Depends(get_db)):
     db_color = crud.get_color(db, id=id)
     if not db_color:
-        raise HTTPException(status_code=400, detail="Color not found!")
+        raise HTTPException(status_code=400, detail=config.get('colors', 'color_not_found'))
     crud.set_color(db=db, id=id, name=color.name)
     return crud.get_color(db=db, id=id)
 
@@ -54,7 +54,7 @@ def change_color(id: int, color: schemas.ColorUpdate, db: Session = Depends(get_
 def delete_color(color: schemas.ColorCreate, db: Session = Depends(get_db)):
     db_color = crud.get_colors(db)
     if db_color:
-        raise HTTPException(status_code=400, detail="Color already registered")
+        raise HTTPException(status_code=400, detail=config.get('colors', 'color_already_registered'))
     return crud.create_color(db=db)
 
 
@@ -62,7 +62,7 @@ def delete_color(color: schemas.ColorCreate, db: Session = Depends(get_db)):
 def undelete_color(color: schemas.ColorCreate, db: Session = Depends(get_db)):
     db_color = crud.set_color(db)
     if db_color:
-        raise HTTPException(status_code=400, detail="Color already registered")
+        raise HTTPException(status_code=400, detail=config.get('colors', 'color_already_registered'))
     return crud.create_color(db=db)
 
 
@@ -76,7 +76,7 @@ def get_colors(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 def create_color(id: int, db: Session = Depends(get_db)):
     db_color = crud.get_features(id=id, db=db)
     if db_color:
-        raise HTTPException(status_code=400, detail="Color already registered")
+        raise HTTPException(status_code=400, detail=config.get('colors', 'color_already_registered'))
     return crud.create_color(db=db)
 
 

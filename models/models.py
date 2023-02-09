@@ -48,8 +48,6 @@ class Users(Base):
     passwordHash = Column(String)
     markingDeletion = Column(Boolean, default=False)
 
-<<<<<<< HEAD
-=======
 
 class Roles(Base):
     __tablename__ ="roles"
@@ -57,4 +55,3 @@ class Roles(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String)
 
->>>>>>> b1cf4faecfb6f68e5deb3c6159ab88310ac17ec3
