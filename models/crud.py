@@ -109,17 +109,17 @@ def change_user(db: Session, user_id: int, new_user_data: schemas.User):
 
 def hide_user(db: Session, user_id: int):
     db_user = get_user_by_id(db=db, user_id=user_id)
-    db_user.markingDelete = True
+    db_user.markingDeletion = True
     db.commit()
 
 
 def show_user(db: Session, user_id: int):
     db_user = get_user_by_id(db=db, user_id=user_id)
-    db_user.markingDelete = False
+    db_user.markingDeletion = False
     db.commit()
 
 
-def get_featurs_by_user_id(db: Session, user_id: int):
+def get_features_by_user_id(db: Session, user_id: int):
     db_user = db.query(
         models.Users.id,
         models.Users.name,
