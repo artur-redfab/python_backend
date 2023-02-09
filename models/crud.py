@@ -162,7 +162,7 @@ def show_vacuum_system(db: Session, vs_id: int):
 
 
 def get_list_vacuum_systems(db: Session):
-    db_vs = db.query(models.VacuumSystem).order_by(models.VacuumSystem.id).all()
+    db_vs = db.query(models.VacuumSystem).all()
     return db_vs
 
 
