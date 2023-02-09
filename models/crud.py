@@ -119,7 +119,7 @@ def show_user(db: Session, user_id: int):
     db.commit()
 
 
-def get_featurs_by_user_id(db: Session, user_id: int):
+def get_features_by_user_id(db: Session, user_id: int):
     db_user = db.query(
         models.Users.id,
         models.Users.name,
