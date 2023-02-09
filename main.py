@@ -1,8 +1,18 @@
-from fastapi import Depends, FastAPI, HTTPException
+import uvicorn
+from fastapi import Depends, FastAPI, HTTPException, Response, Cookie
 from sqlalchemy.orm import Session
 from models import crud
 from models import schemas, models
 from models.database import SessionLocal, engine
+import hashlib
+from decouple import config
+from datetime import datetime, timedelta
+from configparser import ConfigParser
+
+# instantiate
+config = ConfigParser()
+# parse existing file
+config.read('messages.ini')
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
@@ -27,7 +37,7 @@ async def pong():
 def create_color(color: schemas.ColorCreate, db: Session = Depends(get_db)):
     db_color = crud.get_colors(db)
     if db_color:
-        raise HTTPException(status_code=400, detail="Color already registered")
+        raise HTTPException(status_code=400, detail=config.get('colors', 'color_already_registered'))
     return crud.create_color(db=db)
 
 
@@ -35,7 +45,7 @@ def create_color(color: schemas.ColorCreate, db: Session = Depends(get_db)):
 def change_color(id: int, color: schemas.ColorUpdate, db: Session = Depends(get_db)):
     db_color = crud.get_color(db, id=id)
     if not db_color:
-        raise HTTPException(status_code=400, detail="Color not found!")
+        raise HTTPException(status_code=400, detail=config.get('colors', 'color_not_found'))
     crud.set_color(db=db, id=id, name=color.name)
     return crud.get_color(db=db, id=id)
 
@@ -44,7 +54,7 @@ def change_color(id: int, color: schemas.ColorUpdate, db: Session = Depends(get_
 def delete_color(color: schemas.ColorCreate, db: Session = Depends(get_db)):
     db_color = crud.get_colors(db)
     if db_color:
-        raise HTTPException(status_code=400, detail="Color already registered")
+        raise HTTPException(status_code=400, detail=config.get('colors', 'color_already_registered'))
     return crud.create_color(db=db)
 
 
@@ -52,7 +62,7 @@ def delete_color(color: schemas.ColorCreate, db: Session = Depends(get_db)):
 def undelete_color(color: schemas.ColorCreate, db: Session = Depends(get_db)):
     db_color = crud.set_color(db)
     if db_color:
-        raise HTTPException(status_code=400, detail="Color already registered")
+        raise HTTPException(status_code=400, detail=config.get('colors', 'color_already_registered'))
     return crud.create_color(db=db)
 
 
@@ -66,23 +76,24 @@ def get_colors(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 def create_color(id: int, db: Session = Depends(get_db)):
     db_color = crud.get_features(id=id, db=db)
     if db_color:
-        raise HTTPException(status_code=400, detail="Color already registered")
+        raise HTTPException(status_code=400, detail=config.get('colors', 'color_already_registered'))
     return crud.create_color(db=db)
 
 
 # users api
 @app.post("/hs/user/create", response_model=schemas.UserBase)
 def create_user(user: schemas.User, db: Session = Depends(get_db)):
-    crud.create_user(db=db, user=user)
+    return crud.create_user(db=db, user=user)
 
 
-@app.put("/hs/user/change/{id}")
+@app.put("/hs/user/change/{id}", status_code=200)
 def change_user(id: int, user: schemas.User, db: Session = Depends(get_db)):
     db_user = crud.get_user_by_id(user_id=id, db=db)
     if db_user is None:
         raise HTTPException(status_code=404, detail='По GUID не найден')
     else:
         crud.change_user(db=db, user_id=id, new_user_data=user)
+        return {"message": "Изменен"}
 
 
 @app.delete("/hs/user/delete/{id}", status_code=200)
@@ -118,12 +129,52 @@ def get_users_role_list(db: Session = Depends(get_db)):
 
 
 @app.post("/hs/user/login")
-def log_in(login: str, passwordHash: str, db: Session = Depends(get_db)):
+def login(response: Response, login: str, password: str, db: Session = Depends(get_db)):
     db_user = crud.get_user_by_login(db=db, login=login)
+    passwordHash = hashlib.md5(str.encode(password, encoding='utf-8')).hexdigest()
     if not db_user or db_user.passwordHash != passwordHash:
         raise HTTPException(status_code=400, detail='Ошибка выполнения, неверный логин или пароль')
     else:
-        return crud.get_users(db=db)
+        response.set_cookie(
+            key="login",
+            value=db_user.login,
+            expires=2689200 # 31 days in second + 3 hours(error) = 2689200 sec
+        )
+        return crud.get_users(db=db, user_id=db_user.id)
+
+
+@app.post("/hs/user/logout")
+def logout(response: Response, login: str | None = Cookie(default=None)):
+    if not login:
+        return {"message": "Вы не в системе!"}
+    else:
+        response.delete_cookie(login)
+        return {"message": f"{login} вышел из системы"}
+
+
+@app.get("/hs/user/current")
+def get_current_user(login: str | None = Cookie(default=None), db: Session = Depends(get_db)):
+    user_db = crud.get_user_by_login(db=db, login=login)
+    if not user_db:
+        return {"message": "Пользователь не вошел в систему или не существует"}
+    else:
+        return crud.get_users(db=db, user_id=user_db.id)
+
+
+@app.get("/hs/user/features/{id}")
+def get_features(id: int, db: Session = Depends(get_db)):
+    db_features = crud.get_featurs_by_user_id(db=db, user_id=id)
+    if not db_features:
+        raise HTTPException(status_code=404, detail='По GUID не найден')
+    else:
+        return db_features
+
+
+# Тест таблиц
+@app.get("/test/roles")
+def get_roles_list(db: Session = Depends(get_db)):
+    return db.query(models.Roles).all()
+
 #check test task
 
 if __name__ == "__main__":
