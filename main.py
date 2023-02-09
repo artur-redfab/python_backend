@@ -175,6 +175,7 @@ def get_features(id: int, db: Session = Depends(get_db)):
 def get_roles_list(db: Session = Depends(get_db)):
     return db.query(models.Roles).all()
 
+#check test task
 
 if __name__ == "__main__":
     uvicorn.run(app, host='127.0.0.1', port=8005)
