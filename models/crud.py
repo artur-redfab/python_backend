@@ -151,13 +151,13 @@ def change_vacuum_system(db: Session, new_data_vs: schemas.VacuumSystemChangeCre
 
 def hide_vacuum_system(db: Session, vs_id: int):
     db_vs = db.query(models.VacuumSystem).filter(models.VacuumSystem.id == vs_id).first()
-    db_vs.markingDelete = True
+    db_vs.markingDeletion = True
     db.commit()
 
 
 def show_vacuum_system(db: Session, vs_id: int):
     db_vs = db.query(models.VacuumSystem).filter(models.VacuumSystem.id == vs_id).first()
-    db_vs.markingDelete = False
+    db_vs.markingDeletion = False
     db.commit()
 
 
