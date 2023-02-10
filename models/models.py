@@ -48,8 +48,19 @@ class Users(Base):
 
 
 class Roles(Base):
-    __tablename__ ="roles"
+    __tablename__ = "roles"
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String)
+
+
+class VacuumSystem(Base):
+    __tablename__ = "vacuumSystem"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String)
+    ip = Column(String)
+    port = Column(Integer)
+    markingDeletion = Column(Boolean, default=False)
+
 
