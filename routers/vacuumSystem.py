@@ -1,8 +1,13 @@
-from fastapi import APIRouter, Cookie, Response, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from starlette.responses import JSONResponse
+
 from models import crud, schemas
 from models.database import get_db
+from configparser import ConfigParser
 
+configP = ConfigParser()
+configP.read('messages.ini')
 
 router = APIRouter(
     prefix='/hs/vacuumSystem',
@@ -13,37 +18,37 @@ router = APIRouter(
 @router.post("/create")
 def create_vacuum_system(vs: schemas.VacuumSystemChangeCreate, db: Session = Depends(get_db)):
     crud.create_vacuum_system(db=db, vs=vs)
-    return {"message": "creating_success"}
+    return JSONResponse(status_code=200, content=configP.get('vacuum_systems', 'vs_created_success'))
 
 
 @router.put("/change/{id}", status_code=200)
 def change_vacuum_system(id: int, vs: schemas.VacuumSystemChangeCreate, db: Session = Depends(get_db)):
     db_vs = crud.get_vacuum_system_by_id(db=db, vs_id=id)
     if not db_vs:
-        raise HTTPException(status_code=404, detail="По GUID не найден")
+        raise HTTPException(status_code=404, detail=configP.get('vacuum_systems', 'vs_not_found'))
     else:
         crud.change_vacuum_system(db=db, new_data_vs=vs, vs_id=id)
-        return {"message": "changing_success"}
+        return JSONResponse(status_code=200, content=configP.get('vacuum_systems', 'vs_changed_success'))
 
 
 @router.delete("/delete/{id}", status_code=200)
 def hide_vacuum_system(id: int, db: Session = Depends(get_db)):
     db_vs = crud.get_vacuum_system_by_id(db=db, vs_id=id)
     if not db_vs:
-        raise HTTPException(status_code=404, detail='По GUID не найден')
+        raise HTTPException(status_code=404, detail=configP.get('vacuum_systems', 'vs_not_found'))
     else:
         crud.hide_vacuum_system(db=db, vs_id=id)
-        return {"message": "Помечен на удаление"}
+        return JSONResponse(status_code=200, content=configP.get('vacuum_systems', 'vs_deleted'))
 
 
 @router.patch("/undelete/{id}")
 def show_vacuum_system(id: int, db: Session = Depends(get_db)):
     db_vs = crud.get_vacuum_system_by_id(db=db, vs_id=id)
     if not db_vs:
-        raise HTTPException(status_code=404, detail='По GUID не найден')
+        raise HTTPException(status_code=404, detail=configP.get('vacuum_systems', 'vs_not_found'))
     else:
         crud.show_vacuum_system(db=db, vs_id=id)
-        return {"massage": "Снята пометка на удаление"}
+        return JSONResponse(status_code=200, content=configP.get('vacuum_systems', 'vs_undeleted'))
 
 
 @router.get("/list")
@@ -56,7 +61,7 @@ def get_vacuum_systems_list(db: Session = Depends(get_db)):
 def get_features(id: int, db: Session = Depends(get_db)):
     db_vs = crud.get_vacuum_system_by_id(db=db, vs_id=id)
     if not db_vs:
-        raise HTTPException(status_code=404, detail='По GUID не найден')
+        raise HTTPException(status_code=404, detail=configP.get('vacuum_systems', 'vs_not_found'))
     else:
         return db_vs
 
