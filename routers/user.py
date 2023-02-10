@@ -106,5 +106,3 @@ def get_features(id: int, db: Session = Depends(get_db)):
     else:
         return db_features
 
-
-
