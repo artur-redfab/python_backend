@@ -61,6 +61,17 @@ ALTER TABLE IF EXISTS public.sensors
     RENAME "CanDeactivate" TO "canDeactivate";
 
 
+-- 7.
+ALTER TABLE IF EXISTS public.materials
+    ALTER COLUMN composite SET NOT NULL;
+
+ALTER TABLE IF EXISTS public.materials
+    ALTER COLUMN "markingDeletion" SET NOT NULL;
+
+ALTER TABLE IF EXISTS public.materials
+    ADD COLUMN "materialUnloadLength" smallint NOT NULL;
+
+
 -- 8.
 ALTER TABLE IF EXISTS public.colors
     RENAME "colorMaterialRGB" TO "colorMaterialHEX";
