@@ -60,6 +60,14 @@ class UserFeatures(BaseModel):
     markingDeletion: bool
 
 
+# Схемы для таблицы Makers
+class MakersBase(BaseModel):
+    name: str
+
+
+
+
+
 
 
 
