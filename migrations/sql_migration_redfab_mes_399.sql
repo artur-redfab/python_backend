@@ -185,3 +185,22 @@ ALTER TABLE IF EXISTS public."errorTriggers" DROP COLUMN IF EXISTS "automaticSer
 ALTER TABLE IF EXISTS public."serviceOperations" DROP COLUMN IF EXISTS "functionName";
 ALTER TABLE IF EXISTS public."serviceOperations"
     ADD COLUMN automatic boolean;
+
+-- 19.
+ALTER TABLE IF EXISTS public.printers
+    ALTER COLUMN "basicCellQuantity" SET NOT NULL;
+
+ALTER TABLE IF EXISTS public.printers
+    ALTER COLUMN "supportCellQuantity" SET NOT NULL;
+
+ALTER TABLE IF EXISTS public.printers
+    ALTER COLUMN "webIs" SET NOT NULL;
+
+ALTER TABLE IF EXISTS public.printers
+    ALTER COLUMN "markingDeletion" SET DEFAULT False;
+
+ALTER TABLE IF EXISTS public.printers
+    ALTER COLUMN "markingDeletion" SET NOT NULL;
+
+ALTER TABLE IF EXISTS public.printers
+    ADD COLUMN "inPrintQueue" boolean NOT NULL DEFAULT True;
