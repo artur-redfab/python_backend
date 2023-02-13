@@ -132,3 +132,32 @@ def get_features_by_user_id(db: Session, user_id: int):
     return db_user
 
 
+# методы для работы с моделью Materials
+def create_material(db: Session, material: schemas.Material):
+    db_materials = models.Materials(
+        name=material.name,
+        idPolymerBase=material.idPolymerBase,
+        composite=material.composite,
+        idMaker=material.idMaker,
+        density=material.density,
+        printingTemp=material.printingTemp,
+        maxRadiatorTemp=material.maxRadiatorTemp,
+        tableTemp=material.tableTemp,
+        blowingParts=material.blowingParts,
+        chamberTemp=material.chamberTemp,
+        timeSwitchCoolingMode=material.timeSwitchCoolingMode,
+        coolingModeTemp=material.coolingModeTemp,
+        materialUnloadSpeed=material.materialUnloadSpeed,
+        materialUnloadTemp=material.materialUnloadTemp,
+        materialUnloadLength=material.materialUnloadLength,
+        materialLoadSpeed=material.materialLoadSpeed,
+        materialCleanLength=material.materialCleanLength,
+        materialServeCoef=material.materialServeCoef,
+        gramsCost=material.gramsCost
+    )
+    db.add(db_materials)
+    db.commit()
+    db.refresh(db_materials)
+    return db_materials
+
+

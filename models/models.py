@@ -77,5 +77,5 @@ class Materials(Base):
     materialCleanLength = Column(Integer, nullable=False)
     materialServeCoef = Column(Integer, nullable=False)
     gramsCost = Column(Numeric)
-    markingDeletion = Column(Boolean, nullable=False)
+    markingDeletion = Column(Boolean, default=False)
 

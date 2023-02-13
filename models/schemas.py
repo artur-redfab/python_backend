@@ -63,9 +63,9 @@ class UserFeatures(BaseModel):
 # Схемы для таблицы Materials
 class Material(BaseModel):
     name: str
-    idPolymerBase: str
+    idPolymerBase: int
     composite: bool
-    idMaker: str
+    idMaker: int
     density: int
     printingTemp: int
     maxRadiatorTemp: int
