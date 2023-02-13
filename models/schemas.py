@@ -60,6 +60,41 @@ class UserFeatures(BaseModel):
     markingDeletion: bool
 
 
+# Схемы для таблицы Materials
+class Material(BaseModel):
+    name: str
+    idPolymerBase: str
+    composite: bool
+    idMaker: str
+    density: int
+    printingTemp: int
+    maxRadiatorTemp: int
+    tableTemp: int
+    blowingParts: int
+    chamberTemp: int
+    timeSwitchCoolingMode: int
+    coolingModeTemp: int
+    materialUnloadSpeed: int
+    materialUnloadTemp: int
+    materialUnloadLength: int
+    materialLoadSpeed: int
+    materialCleanLength: int
+    materialServeCoef: int
+    gramsCost: int
+
+    class Config:
+        orm_mode = True
+
+
+class MaterialId(BaseModel):
+    id: str
+
+    class Config:
+        orm_mode = True
+
+
+class MaterialFeatures(Material, MaterialId):
+    markingDeletion: bool
 
 
 
