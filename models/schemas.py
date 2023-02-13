@@ -61,8 +61,17 @@ class UserFeatures(BaseModel):
 
 
 # Схемы для таблицы Makers
-class MakersBase(BaseModel):
+class MakerName(BaseModel):
     name: str
+
+
+class MakerId(BaseModel):
+    id: str
+
+
+class MakerList(MakerId):
+    name: str
+    markingDeletion: bool
 
 
 
