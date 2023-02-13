@@ -143,9 +143,9 @@ def create_maker(db: Session, maker: schemas.MakerName):
     return db_maker
 
 
-def change_maker(db: Session, maker: schemas.MakerName, maker_id: int):
+def change_maker(db: Session, new_data_maker: schemas.MakerName, maker_id: int):
     db_maker = db.query(models.Makers).filter(models.Makers.id == maker_id).first()
-    db_maker.name = maker.name
+    db_maker.name = new_data_maker.name
     db.commit()
 
 
@@ -166,7 +166,7 @@ def get_makers(db: Session):
     return db_makers
 
 
-def get_features(db: Session, maker_id: int):
+def get_maker_by_id(db: Session, maker_id: int):
     db_maker = db.query(models.Makers).filter(models.Makers.id == maker_id).first()
     return db_maker
 
