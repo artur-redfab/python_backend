@@ -53,3 +53,10 @@ class Roles(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String)
 
+
+# Модель polymerBases
+class PolymerBases(Base):
+    __tablename__ = "polymerBases"
+
+    id = Column(Integer, primary_key=True, index=True, nullable=False)
+    name = Column(String, nullable=False)

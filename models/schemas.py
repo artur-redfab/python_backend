@@ -60,7 +60,10 @@ class UserFeatures(BaseModel):
     markingDeletion: bool
 
 
-
+# Схемы для таблицы polumerBases
+class PolymerBases(BaseModel):
+    id: int
+    name: str
 
 
 
