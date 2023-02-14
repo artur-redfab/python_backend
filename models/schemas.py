@@ -60,6 +60,7 @@ class UserFeatures(BaseModel):
     markingDeletion: bool
 
 
+
 # Схемы для таблицы Materials
 class Material(BaseModel):
     name: str
@@ -95,6 +96,12 @@ class MaterialId(BaseModel):
 
 class MaterialFeatures(Material, MaterialId):
     markingDeletion: bool
+
+
+# Схемы для таблицы polumerBases
+class PolymerBases(BaseModel):
+    id: int
+    name: str
 
 
 

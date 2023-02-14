@@ -79,3 +79,11 @@ class Materials(Base):
     gramsCost = Column(Numeric)
     markingDeletion = Column(Boolean, default=False)
 
+
+# Модель polymerBases
+class PolymerBases(Base):
+    __tablename__ = "polymerBases"
+
+    id = Column(Integer, primary_key=True, index=True, nullable=False)
+    name = Column(String, nullable=False)
+
