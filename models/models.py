@@ -87,3 +87,12 @@ class PolymerBases(Base):
     id = Column(Integer, primary_key=True, index=True, nullable=False)
     name = Column(String, nullable=False)
 
+
+# модель Makers
+class Makers(Base):
+    __tablename__ = "makers"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String)
+    markingDeletion = Column(Boolean, default=False)
+
