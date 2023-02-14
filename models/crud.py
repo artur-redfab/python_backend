@@ -1,4 +1,5 @@
 import hashlib
+from sqlalchemy import over
 from sqlalchemy.orm import Session
 from models import schemas, models
 
@@ -158,6 +159,53 @@ def create_material(db: Session, material: schemas.Material):
     return db_materials
 
 
+def get_material_by_id(db: Session, mat_id: int):
+    db_material = db.query(models.Materials).filter(models.Materials.id == mat_id).first()
+    return db_material
+
+
+def change_material(db: Session, mat_id: int, new_data_material: schemas.Material):
+    db_material = db.query(models.Materials).filter(models.Materials.id == mat_id).first()
+    db_material.name = new_data_material.name
+    db_material.idPolymerBase = new_data_material.idPolymerBase
+    db_material.composite = new_data_material.composite
+    db_material.idMaker = new_data_material.idMaker
+    db_material.density = new_data_material.density
+    db_material.printingTemp = new_data_material.printingTemp
+    db_material.maxRadiatorTemp = new_data_material.maxRadiatorTemp
+    db_material.tableTemp = new_data_material.tableTemp
+    db_material.blowingParts = new_data_material.blowingParts
+    db_material.chamberTemp = new_data_material.chamberTemp
+    db_material.timeSwitchCoolingMode = new_data_material.timeSwitchCoolingMode
+    db_material.coolingModeTemp = new_data_material.coolingModeTemp
+    db_material.materialUnloadSpeed = new_data_material.materialUnloadSpeed
+    db_material.materialUnloadTemp = new_data_material.materialUnloadTemp
+    db_material.materialUnloadLength = new_data_material.materialUnloadLength
+    db_material.materialLoadSpeed = new_data_material.materialLoadSpeed
+    db_material.materialCleanLength = new_data_material.materialCleanLength
+    db_material.materialServeCoef = new_data_material.materialServeCoef
+    db_material.gramsCost = new_data_material.gramsCost
+    db.commit()
+
+
+def hide_material(db: Session, mat_id: int):
+    db_material = db.query(models.Materials).filter(models.Materials.id == mat_id).first()
+    db_material.markingDeletion = True
+    db.commit()
+
+
+def show_material(db: Session, mat_id: int):
+    db_material = db.query(models.Materials).filter(models.Materials.id == mat_id).first()
+    db_material.markingDeletion = False
+    db.commit()
+
+
+def get_materials(sort: schemas.SortMaterials, db: Session):
+    db_materials = db.query(models.Materials).offset(sort.offset).limit(sort.limit).all()
+    db = db_materials
+    return db_materials
+
+
 # методы для работы с моделью Makers
 def create_maker(db: Session, maker: schemas.MakerName):
     db_maker = models.Makers(
@@ -181,7 +229,7 @@ def hide_maker(db: Session, maker_id: int):
     db.commit()
 
 
-def show_maker(db:Session, maker_id: int):
+def show_maker(db: Session, maker_id: int):
     db_maker = db.query(models.Makers).filter(models.Makers.id == maker_id).first()
     db_maker.markingDeletion = False
     db.commit()

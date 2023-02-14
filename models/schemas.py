@@ -80,6 +80,14 @@ class MakerList(MakerId):
     markingDeletion: bool
 
 
+# Схемы для таблицы polumerBases
+class PolymerBases(BaseModel):
+    name: str
+
+    class Config:
+        orm_mode = True
+
+
 # Схемы для таблицы Materials
 class Material(BaseModel):
     name: str
@@ -113,14 +121,33 @@ class MaterialId(BaseModel):
         orm_mode = True
 
 
-class MaterialFeatures(Material, MaterialId):
+class MaterialFeatures(Material):
+    id: str
     markingDeletion: bool
 
+    class Config:
+        orm_mode = True
 
-# Схемы для таблицы polumerBases
-class PolymerBases(BaseModel):
-    id: int
+
+class SortMaterials(BaseModel):
+    limit: int = 0
+    offset: int = 0
+    sortBy: str = "string"
+    direction: str = "ASC"
+
+
+class SortedMaterials(BaseModel):
     name: str
+    polymer: PolymerBases
+    composite: bool
+    maker: MakerName
+    density: int
+    printingTemp: int
+
+    class Config:
+        orm_mode = True
+
+
 
 
 

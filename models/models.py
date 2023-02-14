@@ -1,5 +1,6 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Numeric
 from .database import Base
+from sqlalchemy.orm import relationship, Mapped
 
 
 class Color(Base):
@@ -78,6 +79,9 @@ class Materials(Base):
     materialServeCoef = Column(Integer, nullable=False)
     gramsCost = Column(Numeric)
     markingDeletion = Column(Boolean, default=False)
+
+    polymer = relationship("PolymerBases")
+    maker = relationship("Makers")
 
 
 # Модель polymerBases
