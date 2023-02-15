@@ -1,8 +1,5 @@
 import hashlib
-
-from sqlalchemy import text
 from sqlalchemy.orm import Session
-
 from models import schemas, models
 
 
@@ -66,7 +63,6 @@ def get_user_by_login(db: Session, login: str):
     return db_user
 
 
-# Уточнить по универсальности метода, он возвращает не все поля БД
 def get_users(db: Session, user_id=None):
     if user_id:
         db_users = db.query(
@@ -109,13 +105,13 @@ def change_user(db: Session, user_id: int, new_user_data: schemas.User):
 
 def hide_user(db: Session, user_id: int):
     db_user = get_user_by_id(db=db, user_id=user_id)
-    db_user.markingDelete = True
+    db_user.markingDeletion = True
     db.commit()
 
 
 def show_user(db: Session, user_id: int):
     db_user = get_user_by_id(db=db, user_id=user_id)
-    db_user.markingDelete = False
+    db_user.markingDeletion = False
     db.commit()
 
 
@@ -171,4 +167,45 @@ def get_maker_by_id(db: Session, maker_id: int):
     return db_maker
 
 
+# методы для работы с моделью vacuumSystem
+def create_vacuum_system(db: Session, vs: schemas.VacuumSystemChangeCreate):
+    db_vs = models.VacuumSystem(
+        name=vs.name,
+        ip=vs.ip,
+        port=vs.port
+    )
+    db.add(db_vs)
+    db.commit()
+    db.refresh(db_vs)
+    return db_vs
+
+
+def change_vacuum_system(db: Session, new_data_vs: schemas.VacuumSystemChangeCreate, vs_id: int):
+    db_vs = db.query(models.VacuumSystem).filter(models.VacuumSystem.id == vs_id).first()
+    db_vs.name = new_data_vs.name
+    db_vs.ip = new_data_vs.ip
+    db_vs.port = new_data_vs.port
+    db.commit()
+
+
+def hide_vacuum_system(db: Session, vs_id: int):
+    db_vs = db.query(models.VacuumSystem).filter(models.VacuumSystem.id == vs_id).first()
+    db_vs.markingDeletion = True
+    db.commit()
+
+
+def show_vacuum_system(db: Session, vs_id: int):
+    db_vs = db.query(models.VacuumSystem).filter(models.VacuumSystem.id == vs_id).first()
+    db_vs.markingDeletion = False
+    db.commit()
+
+
+def get_list_vacuum_systems(db: Session):
+    db_vs = db.query(models.VacuumSystem).all()
+    return db_vs
+
+
+def get_vacuum_system_by_id(db: Session, vs_id: int):
+    db_vs = db.query(models.VacuumSystem).filter(models.VacuumSystem.id == vs_id).first()
+    return db_vs
 
