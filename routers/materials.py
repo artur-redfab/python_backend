@@ -50,7 +50,7 @@ def show_material(id: int, db: Session = Depends(get_db)):
         return JSONResponse(status_code=200, content=configP.get('materials', 'material_undeleted'))
 
 
-@router.post("/list", response_model=list[schemas.SortedMaterials])
+@router.post("/list")
 def get_materials_list(sort: schemas.SortMaterials, db: Session = Depends(get_db)):
     materials = crud.get_materials(sort=sort, db=db)
     return materials

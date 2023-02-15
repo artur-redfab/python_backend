@@ -1,6 +1,9 @@
 import hashlib
-from sqlalchemy.orm import Session, joinedload
+from sqlalchemy.orm import Session
+from starlette.responses import JSONResponse
+
 from models import schemas, models
+from routers.materials import configP
 
 
 def get_color(db: Session, id: int):
@@ -200,14 +203,24 @@ def show_material(db: Session, mat_id: int):
 
 
 def get_materials(sort: schemas.SortMaterials, db: Session):
-
-    #query = f"""SELECT id, name FROM user ORDER BY name DESC"""
-    db_materials = db.query(models.Materials).options(
-        joinedload('')
-    )
-    #db_materials = db.query(models.Materials.id, models.Materials.name).offset(sort.offset).limit(sort.limit).all()
-    db = db_materials
-    return db_materials
+    if not hasattr(models.Materials, sort.sortBy):
+        return JSONResponse(status_code=400, content=configP.get('materials', 'sort_error'))
+    attr = getattr(models.Materials, sort.sortBy)
+    test_query = db.query(models.Materials.name,
+                          models.PolymerBases.name.label('polymerBase'),
+                          models.Materials.composite,
+                          models.Makers.name.label('maker'),
+                          models.Materials.density,
+                          models.Materials.printingTemp
+                          )\
+        .join(models.Makers, models.Makers.id == models.Materials.idMaker)\
+        .join(models.PolymerBases, models.PolymerBases.id == models.Materials.idPolymerBase)
+    if sort.direction == "ASC":
+        test_query = test_query.order_by(attr.asc()).offset(sort.offset).limit(sort.limit).all()
+    if sort.direction == "DESC":
+        test_query = test_query.order_by(attr.desc()).offset(sort.offset).limit(sort.limit).all()
+    db = test_query
+    return db
 
 
 # методы для работы с моделью Makers
