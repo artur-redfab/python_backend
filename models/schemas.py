@@ -76,11 +76,6 @@ class VacuumSystemBase(BaseModel):
         orm_mode = True
 
 
-class MakerList(MakerId):
-    name: str
-    markingDeletion: bool
-
-
 class VacuumSystemChangeCreate(BaseModel):
     name: str
     ip: str
@@ -93,6 +88,25 @@ class VacuumSystemFeatures(VacuumSystemBase):
     port: int
     markingDeletion: bool
 
+
+# Схемы для таблицы Makers
+class MakerName(BaseModel):
+    name: str
+
+    class Config:
+        orm_mode = True
+
+
+class MakerId(BaseModel):
+    id: str
+
+    class Config:
+        orm_mode = True
+
+
+class MakerList(MakerId):
+    name: str
+    markingDeletion: bool
 
 # Схемы для таблицы polumerBases
 class PolymerBases(BaseModel):
