@@ -163,16 +163,3 @@ class SortMaterials(BaseModel):
     sortBy: str = "name"
     direction: str = "ASC"
 
-
-class SortedMaterials(BaseModel):
-    name: str
-    polymer: PolymerBases
-    composite: bool
-    maker: MakerName
-    density: int
-    printingTemp: int
-
-    class Config:
-        orm_mode = True
-
-

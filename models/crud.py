@@ -204,7 +204,7 @@ def get_materials(sort: schemas.SortMaterials, db: Session):
     if not hasattr(models.Materials, sort.sortBy):
         return JSONResponse(status_code=400, content=configP.get('materials', 'sort_error'))
     attr = getattr(models.Materials, sort.sortBy)
-    test_query = db.query(models.Materials.name,
+    db_materials = db.query(models.Materials.name,
                           models.PolymerBases.name.label('polymerBase'),
                           models.Materials.composite,
                           models.Makers.name.label('maker'),
@@ -214,11 +214,10 @@ def get_materials(sort: schemas.SortMaterials, db: Session):
         .join(models.Makers, models.Makers.id == models.Materials.idMaker)\
         .join(models.PolymerBases, models.PolymerBases.id == models.Materials.idPolymerBase)
     if sort.direction == "DESC":
-        test_query = test_query.order_by(attr.desc()).offset(sort.offset).limit(sort.limit).all()
+        db_materials = db_materials.order_by(attr.desc()).offset(sort.offset).limit(sort.limit).all()
     else:
-        test_query = test_query.order_by(attr.asc()).offset(sort.offset).limit(sort.limit).all()
-    db = test_query
-    return db
+        db_materials = db_materials.order_by(attr.asc()).offset(sort.offset).limit(sort.limit).all()
+    return db_materials
 
 
 # методы для работы с моделью Makers
