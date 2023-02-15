@@ -4,11 +4,11 @@ from models import models
 from models.database import engine
 from routers.color import router as color_routers
 from routers.user import router as user_routers
-<<<<<<< HEAD
+from routers.materials import router as materials_routers
+from routers.polymerbases import router as polymerBases_routers
 from routers.makers import router as makers_routers
-=======
 from routers.vacuumSystem import router as vacuumSystem_routers
->>>>>>> 2545a30a546295a780a1499acd4f55b20f238a6d
+
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
@@ -21,17 +21,14 @@ async def pong():
 
 # color api
 app.include_router(color_routers)
-
-
 # users api
 app.include_router(user_routers)
-
-#check test task
-
 # vacuumSystem api
 app.include_router(vacuumSystem_routers)
-
-
+# polymerBases api
+app.include_router(polymerBases_routers)
+# materials api
+app.include_router(materials_routers)
 # makers api
 app.include_router(makers_routers)
 

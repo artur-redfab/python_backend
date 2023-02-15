@@ -76,9 +76,10 @@ class VacuumSystemBase(BaseModel):
         orm_mode = True
 
 
-class MakerList(MakerId):
+class VacuumSystemChangeCreate(BaseModel):
     name: str
-    markingDeletion: bool
+    ip: str
+    port: int
 
 
 class VacuumSystemFeatures(VacuumSystemBase):
@@ -88,8 +89,58 @@ class VacuumSystemFeatures(VacuumSystemBase):
     markingDeletion: bool
 
 
-class VacuumSystemChangeCreate(BaseModel):
+# Схемы для таблицы polumerBases
+class PolymerBases(BaseModel):
     name: str
-    ip: str
-    port: int
+
+    class Config:
+        orm_mode = True
+
+
+# Схемы для таблицы Materials
+class Material(BaseModel):
+    name: str
+    idPolymerBase: int
+    composite: bool
+    idMaker: int
+    density: int
+    printingTemp: int
+    maxRadiatorTemp: int
+    tableTemp: int
+    blowingParts: int
+    chamberTemp: int
+    timeSwitchCoolingMode: int
+    coolingModeTemp: int
+    materialUnloadSpeed: int
+    materialUnloadTemp: int
+    materialUnloadLength: int
+    materialLoadSpeed: int
+    materialCleanLength: int
+    materialServeCoef: int
+    gramsCost: int
+
+    class Config:
+        orm_mode = True
+
+
+class MaterialId(BaseModel):
+    id: str
+
+    class Config:
+        orm_mode = True
+
+
+class MaterialFeatures(Material):
+    id: str
+    markingDeletion: bool
+
+    class Config:
+        orm_mode = True
+
+
+class SortMaterials(BaseModel):
+    limit: int = 0
+    offset: int = 0
+    sortBy: str = "name"
+    direction: str = "ASC"
 
