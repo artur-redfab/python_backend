@@ -21,6 +21,7 @@ app.include_router(color_routers)
 # users api
 app.include_router(user_routers)
 
+#check test task
 
 if __name__ == "__main__":
     uvicorn.run(app, host='127.0.0.1', port=8005)
