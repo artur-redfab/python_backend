@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class ColorBase(BaseModel):
@@ -76,6 +76,11 @@ class VacuumSystemBase(BaseModel):
         orm_mode = True
 
 
+class MakerList(MakerId):
+    name: str
+    markingDeletion: bool
+
+
 class VacuumSystemChangeCreate(BaseModel):
     name: str
     ip: str
@@ -143,4 +148,17 @@ class SortMaterials(BaseModel):
     offset: int = 0
     sortBy: str = "name"
     direction: str = "ASC"
+
+
+class SortedMaterials(BaseModel):
+    name: str
+    polymer: PolymerBases
+    composite: bool
+    maker: MakerName
+    density: int
+    printingTemp: int
+
+    class Config:
+        orm_mode = True
+
 
