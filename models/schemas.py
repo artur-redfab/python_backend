@@ -132,7 +132,7 @@ class MaterialFeatures(Material):
 class SortMaterials(BaseModel):
     limit: int = 0
     offset: int = 0
-    sortBy: str = "string"
+    sortBy: str = "name"
     direction: str = "ASC"
 
 

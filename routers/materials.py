@@ -24,29 +24,30 @@ def create_material(material: schemas.Material, db: Session = Depends(get_db)):
 def change_material(id: int, material: schemas.Material, db: Session = Depends(get_db)):
     db_material = crud.get_material_by_id(db=db, mat_id=id)
     if not db_material:
-        raise HTTPException(status_code=404, detail="Error")
+        raise HTTPException(status_code=404, detail=configP.get('materials', 'material_not_found'))
     else:
         crud.change_material(db=db, mat_id=id, new_data_material=material)
+        return JSONResponse(status_code=200, content=configP.get('materials', 'material_changed_success'))
 
 
 @router.delete("/delete/{id}")
 def hide_material(id: int, db: Session = Depends(get_db)):
     db_material = crud.get_material_by_id(db=db, mat_id=id)
     if not db_material:
-        raise HTTPException(status_code=404, detail="Error")
+        raise HTTPException(status_code=404, detail=configP.get('materials', 'material_not_found'))
     else:
         crud.hide_material(db=db, mat_id=id)
-        return JSONResponse(status_code=200, content=configP.get('makers', 'maker_deleted'))
+        return JSONResponse(status_code=200, content=configP.get('materials', 'material_deleted'))
 
 
 @router.patch("/undelete/{id}")
 def show_material(id: int, db: Session = Depends(get_db)):
     db_material = crud.get_material_by_id(db=db, mat_id=id)
     if not db_material:
-        raise HTTPException(status_code=404, detail="Error")
+        raise HTTPException(status_code=404, detail=configP.get('materials', 'material_not_found'))
     else:
         crud.show_material(db=db, mat_id=id)
-        return JSONResponse(status_code=200, content=configP.get('makers', 'maker_deleted'))
+        return JSONResponse(status_code=200, content=configP.get('materials', 'material_undeleted'))
 
 
 @router.post("/list", response_model=list[schemas.SortedMaterials])
@@ -59,7 +60,7 @@ def get_materials_list(sort: schemas.SortMaterials, db: Session = Depends(get_db
 def get_features(id: int, db: Session = Depends(get_db)):
     db_material = crud.get_material_by_id(db=db, mat_id=id)
     if not db_material:
-        raise HTTPException(status_code=404, detail="Error")
+        raise HTTPException(status_code=404, detail=configP.get('materials', 'material_not_found'))
     else:
         return db_material
 
