@@ -60,10 +60,23 @@ class UserFeatures(BaseModel):
     markingDeletion: bool
 
 
+# Схемы для таблицы vacuumSystem
+class VacuumSystemBase(BaseModel):
+    id: str
+
+    class Config:
+        orm_mode = True
 
 
+class VacuumSystemFeatures(VacuumSystemBase):
+    name: str
+    ip: str
+    port: int
+    markingDeletion: bool
 
 
-
-
+class VacuumSystemChangeCreate(BaseModel):
+    name: str
+    ip: str
+    port: int
 
