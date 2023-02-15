@@ -80,8 +80,8 @@ class Materials(Base):
     gramsCost = Column(Numeric)
     markingDeletion = Column(Boolean, default=False)
 
-    polymer = relationship("PolymerBases")
-    maker = relationship("Makers")
+    polymer = relationship("PolymerBases", innerjoin=True)
+    maker = relationship("Makers", innerjoin=True)
 
 
 # Модель polymerBases

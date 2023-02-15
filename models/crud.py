@@ -1,6 +1,5 @@
 import hashlib
-from sqlalchemy import over
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from models import schemas, models
 
 
@@ -201,7 +200,12 @@ def show_material(db: Session, mat_id: int):
 
 
 def get_materials(sort: schemas.SortMaterials, db: Session):
-    db_materials = db.query(models.Materials).offset(sort.offset).limit(sort.limit).all()
+
+    #query = f"""SELECT id, name FROM user ORDER BY name DESC"""
+    db_materials = db.query(models.Materials).options(
+        joinedload('')
+    )
+    #db_materials = db.query(models.Materials.id, models.Materials.name).offset(sort.offset).limit(sort.limit).all()
     db = db_materials
     return db_materials
 
