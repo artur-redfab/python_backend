@@ -1,6 +1,6 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Numeric
 from .database import Base
-from sqlalchemy.orm import relationship, Mapped
+from sqlalchemy.orm import relationship
 
 
 class Color(Base):

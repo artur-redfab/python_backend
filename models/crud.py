@@ -215,10 +215,10 @@ def get_materials(sort: schemas.SortMaterials, db: Session):
                           )\
         .join(models.Makers, models.Makers.id == models.Materials.idMaker)\
         .join(models.PolymerBases, models.PolymerBases.id == models.Materials.idPolymerBase)
-    if sort.direction == "ASC":
-        test_query = test_query.order_by(attr.asc()).offset(sort.offset).limit(sort.limit).all()
     if sort.direction == "DESC":
         test_query = test_query.order_by(attr.desc()).offset(sort.offset).limit(sort.limit).all()
+    else:
+        test_query = test_query.order_by(attr.asc()).offset(sort.offset).limit(sort.limit).all()
     db = test_query
     return db
 
