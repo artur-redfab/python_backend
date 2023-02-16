@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime
 from .database import Base
 
 
@@ -52,4 +52,22 @@ class Roles(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String)
+
+
+# Модель Projects
+
+class Projects:
+    __tablename__ = "projects"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, unique=True, nullable=False)
+    idPriority = Column(Integer) # FK!!!!!
+    createDate = Column(DateTime, nullable=False)
+    deadLine = Column(DateTime, nullable=False)
+    changeDate = Column(DateTime)
+    orderNumber = Column(String, nullable=False)
+    idResponsible = Column(Integer, nullable=False) # FK !!!!!
+    idAuthor = Column(Integer, nullable=False) # FK !!!!!!
+    comment = Column(String)
+    markingDeletion = Column(Boolean, nullable=False, default=False)
 
