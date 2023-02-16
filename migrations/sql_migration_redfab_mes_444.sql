@@ -1,5 +1,10 @@
 ALTER TABLE IF EXISTS public.projects DROP COLUMN IF EXISTS cost;
 
+ALTER TABLE IF EXISTS public.projects DROP COLUMN IF EXISTS "createDate";
+
+ALTER TABLE IF EXISTS public.projects
+    ADD COLUMN "createDate" timestamp with time zone NOT NULL;
+
 ALTER TABLE IF EXISTS public.projects
     ALTER COLUMN "idPriority" SET NOT NULL;
 

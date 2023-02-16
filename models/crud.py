@@ -1,4 +1,5 @@
 import hashlib
+from datetime import datetime
 
 from sqlalchemy import text
 from sqlalchemy.orm import Session
@@ -130,5 +131,39 @@ def get_features_by_user_id(db: Session, user_id: int):
         models.Users.markingDeletion
     ).filter(models.Users.id == user_id).first()
     return db_user
+
+
+# методы для работы с моделью Projects
+def create_project(db: Session, project: schemas.CreateProject):
+    db_project = models.Projects(
+        name=project.name,
+        idPriority=project.idPriority,
+        deadLine=project.deadLine,
+        orderNumber=project.orderNumber,
+        idPartner=project.idPartner,
+        idResponsible=project.idResponsible,
+        idAuthor=project.idAuthor,
+        comment=project.comment
+    )
+    db.add(db_project)
+    db.commit()
+    db.refresh(db_project)
+    query = db.query(
+        models.Projects.id,
+        models.Projects.name,
+        models.Projects.idPriority,
+        models.Projects.createDate,
+        models.Projects.deadLine,
+        models.Projects.changeDate,
+        models.Projects.orderNumber,
+        models.Projects.idPartner,
+        models.Projects.idResponsible,
+        models.Users.name.label('author'),
+        # models.ProjectStatusHistory.idProjectStatus # TODO!!!!
+        models.Projects.comment,
+        models.Projects.markingDeletion
+    ).join(models.Users, models.Users.id == models.Projects.idAuthor)\
+     .filter(models.Projects.id == db_project.id).first()
+    return query
 
 

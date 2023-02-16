@@ -11,9 +11,9 @@ router = APIRouter(
 )
 
 
-@router.post("/create")
-def create_project():
-    pass
+@router.post("/create", response_model=schemas.CreatedProject)
+def create_project(project: schemas.CreateProject, db: Session = Depends(get_db)):
+    return crud.create_project(db=db, project=project)
 
 
 @router.put("/change/{id}")

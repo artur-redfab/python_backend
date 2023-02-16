@@ -1,3 +1,4 @@
+from datetime import datetime
 from pydantic import BaseModel
 
 
@@ -60,10 +61,38 @@ class UserFeatures(BaseModel):
     markingDeletion: bool
 
 
+#Схемы для таблицы projects
+
+class CreateProject(BaseModel):
+    name: str
+    idPriority: str = "1"
+    deadLine: str = "2023-02-16"
+    orderNumber: str
+    idPartner: str = "1"
+    idResponsible: str = "5"
+    idAuthor: str = "5"
+    comment: str
+
+    class Config:
+        orm_mode = True
 
 
+class CreatedProject(BaseModel):
+    id: str
+    name: str
+    idPriority: str
+    createDate: datetime
+    deadLine: datetime
+    changeDate: datetime
+    orderNumber: str
+    idPartner: str
+    idResponsible: str
+    author: str
+    idProjectStatus: str | None
+    comment: str
+    markingDeletion: bool
 
-
-
+    class Config:
+        orm_mode = True
 
 
