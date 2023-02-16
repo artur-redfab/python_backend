@@ -3,6 +3,7 @@ from datetime import datetime
 
 from sqlalchemy import text
 from sqlalchemy.orm import Session
+from starlette.responses import JSONResponse
 
 from models import schemas, models
 
@@ -162,8 +163,59 @@ def create_project(db: Session, project: schemas.CreateProject):
         # models.ProjectStatusHistory.idProjectStatus # TODO!!!!
         models.Projects.comment,
         models.Projects.markingDeletion
-    ).join(models.Users, models.Users.id == models.Projects.idAuthor)\
-     .filter(models.Projects.id == db_project.id).first()
+    ).join(models.Users, models.Users.id == models.Projects.idAuthor) \
+        .filter(models.Projects.id == db_project.id).first()
     return query
 
 
+def get_project_by_id(project_id: int, db: Session):
+    db_project = db.query(models.Projects).filter(models.Projects.id == project_id).first()
+    return db_project
+
+
+def change_project(db: Session, new_project_data: schemas.ChangeProject, project_id: int):
+    db_project = db.query(models.Projects).filter(models.Projects.id == project_id).first()
+    db_project.name = new_project_data.name
+    db_project.idPriority = new_project_data.idPriority
+    db_project.deadLine = new_project_data.deadLine
+    db_project.orderNumber = new_project_data.orderNumber
+    db_project.idPartner = new_project_data.idPartner
+    db_project.idResponsible = new_project_data.idResponsible
+    db_project.comment = new_project_data.comment
+    db.commit()
+
+
+def hide_project(db: Session, project_id: int):
+    db_project = db.query(models.Projects).filter(models.Projects.id == project_id).first()
+    db_project.markingDeletion = True
+    db.commit()
+
+
+def show_project(db: Session, project_id: int):
+    db_project = db.query(models.Projects).filter(models.Projects.id == project_id).first()
+    db_project.markingDeletion = False
+    db.commit()
+
+
+def get_projects(sort: schemas.SortProjects, db: Session):
+    if not hasattr(models.Projects, sort.sortBy):
+        return JSONResponse(status_code=400, content="Sort error")
+    attr = getattr(models.Projects, sort.sortBy)
+    db_query = db.query(
+        models.Projects.id,
+        models.Projects.name,
+        models.Projects.idPriority,
+        models.Projects.orderNumber,
+        models.Projects.idPartner,
+        # TODO: models.Partners.name.label('partner')
+        models.Projects.idResponsible,
+        models.Users.name.label('responsible'),
+        models.Projects.markingDeletion
+    ) \
+        .join(models.Users, models.Users.id == models.Projects.idResponsible)
+    # TODO: .join(models.Partners, models.Partners.id == models.Project.idPartner)
+    if sort.direction == "DESC":
+        db_query = db_query.order_by(attr.desc()).offset(sort.offset).limit(sort.limit).all()
+    else:
+        db_query = db_query.order_by(attr.asc()).offset(sort.offset).limit(sort.limit).all()
+    return db_query

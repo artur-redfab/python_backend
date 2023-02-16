@@ -16,24 +16,39 @@ def create_project(project: schemas.CreateProject, db: Session = Depends(get_db)
     return crud.create_project(db=db, project=project)
 
 
-@router.put("/change/{id}")
-def change_project():
-    pass
+@router.put("/change/{id}", status_code=200)
+def change_project(project: schemas.ChangeProject, id: int, db: Session = Depends(get_db)):
+    db_project = crud.get_project_by_id(project_id=id, db=db)
+    if not db_project:
+        raise HTTPException(status_code=404, detail='По GUID не найден')
+    else:
+        crud.change_project(db=db, new_project_data=project, project_id=id)
+        return {"message": "Изменен"}
 
 
-@router.delete("/delete/{id}")
-def hide_project():
-    pass
+@router.delete("/delete/{id}", status_code=200)
+def hide_project(id: int, db: Session = Depends(get_db)):
+    db_project = crud.get_project_by_id(project_id=id, db=db)
+    if not db_project:
+        raise HTTPException(status_code=404, detail='По GUID не найден')
+    else:
+        crud.hide_project(db=db, project_id=id)
+        return {"message": "Изменен"}
 
 
-@router.patch("/undelete/{id}")
-def show_project():
-    pass
+@router.patch("/undelete/{id}", status_code=200)
+def show_project(id: int, db: Session = Depends(get_db)):
+    db_project = crud.get_project_by_id(project_id=id, db=db)
+    if not db_project:
+        raise HTTPException(status_code=404, detail='По GUID не найден')
+    else:
+        crud.show_project(db=db, project_id=id)
+        return {"message": "Изменен"}
 
 
-@router.post("/list")
-def get_projects_list():
-    pass
+@router.post("/list", response_model=list[schemas.ListProjects])
+def get_projects_list(sort: schemas.SortProjects, db: Session = Depends(get_db)):
+    return crud.get_projects(db=db, sort=sort)
 
 
 @router.get("/features/{id}")

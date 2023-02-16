@@ -96,3 +96,35 @@ class CreatedProject(BaseModel):
         orm_mode = True
 
 
+class ChangeProject(BaseModel):
+    name: str
+    idPriority: str = "1"
+    deadLine: str = "2023-02-1"
+    orderNumber: str = "1"
+    idPartner: str = "1"
+    idResponsible: str = "5"
+    comment: str
+
+
+class ListProjects(BaseModel):
+    id: str
+    name: str
+    idPriority: str
+    createDate: str | None
+    orderNumber: str
+    idPartner: str
+    partner: str | None
+    idResponsible: str
+    responsible: str
+    markingDeletion: bool
+
+    class Config:
+        orm_mode = True
+
+
+class SortProjects(BaseModel):
+    limit: int = 10
+    offset: int
+    sortBy: str = "name"
+    direction: str = "ASC"
+
