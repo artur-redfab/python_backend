@@ -66,6 +66,7 @@ class Projects(Base):
     deadLine = Column(DateTime, nullable=False)
     changeDate = Column(DateTime)
     orderNumber = Column(String, nullable=False)
+    idPartner = Column(Integer) #, ForeignKey('partners.id'), nullable=False)
     idResponsible = Column(Integer, ForeignKey('users.id'), nullable=False)
     idAuthor = Column(Integer, ForeignKey('users.id'), nullable=False)
     comment = Column(String)

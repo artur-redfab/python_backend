@@ -1,5 +1,3 @@
-ALTER TABLE IF EXISTS public.projects DROP COLUMN IF EXISTS "idPartner";
-
 ALTER TABLE IF EXISTS public.projects DROP COLUMN IF EXISTS cost;
 
 ALTER TABLE IF EXISTS public.projects
@@ -25,4 +23,3 @@ ALTER TABLE IF EXISTS public.projects
 
 ALTER TABLE IF EXISTS public.projects
     ALTER COLUMN "markingDeletion" SET NOT NULL;
-ALTER TABLE IF EXISTS public.projects DROP CONSTRAINT IF EXISTS "projects_idPartner_fkey";
