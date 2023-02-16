@@ -56,18 +56,25 @@ class Roles(Base):
 
 # Модель Projects
 
-class Projects:
+class Projects(Base):
     __tablename__ = "projects"
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, unique=True, nullable=False)
-    idPriority = Column(Integer) # FK!!!!!
+    idPriority = Column(Integer, ForeignKey('priorities.id'), nullable=False) # FK!!!!!
     createDate = Column(DateTime, nullable=False)
     deadLine = Column(DateTime, nullable=False)
     changeDate = Column(DateTime)
     orderNumber = Column(String, nullable=False)
-    idResponsible = Column(Integer, nullable=False) # FK !!!!!
-    idAuthor = Column(Integer, nullable=False) # FK !!!!!!
+    idResponsible = Column(Integer, ForeignKey('users.id'), nullable=False)
+    idAuthor = Column(Integer, ForeignKey('users.id'), nullable=False)
     comment = Column(String)
     markingDeletion = Column(Boolean, nullable=False, default=False)
+
+
+class Priorities(Base):
+    __tablename__ = "priorities"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, unique=True, nullable=False)
 
