@@ -4,9 +4,9 @@ from pydantic import BaseModel, Field
 
 class Material(BaseModel):
     name: str
-    idPolymerBase: int
+    idPolymerBase: int = 2
     composite: bool
-    idMaker: int
+    idMaker: int = 1
     density: int
     printingTemp: int
     maxRadiatorTemp: int

@@ -2,6 +2,8 @@ from sqlalchemy.orm import Session
 from starlette.responses import JSONResponse
 from components.materials import schemas, models
 from configparser import ConfigParser
+from components.polymerBases import models as polymer_models
+from components.makers import models as makers_models
 
 configP = ConfigParser()
 configP.read('messages.ini')
@@ -81,14 +83,14 @@ def get_materials(sort: schemas.SortMaterials, db: Session):
         return JSONResponse(status_code=400, content=configP.get('materials', 'sort_error'))
     attr = getattr(models.Materials, sort.sortBy)
     db_materials = db.query(models.Materials.name,
-                          models.PolymerBases.name.label('polymerBase'),
+                          polymer_models.PolymerBases.name.label('polymerBase'),
                           models.Materials.composite,
-                          models.Makers.name.label('maker'),
+                          makers_models.Makers.name.label('maker'),
                           models.Materials.density,
                           models.Materials.printingTemp
                           )\
-        .join(models.Makers, models.Makers.id == models.Materials.idMaker)\
-        .join(models.PolymerBases, models.PolymerBases.id == models.Materials.idPolymerBase)
+        .join(makers_models.Makers, makers_models.Makers.id == models.Materials.idMaker)\
+        .join(polymer_models.PolymerBases, polymer_models.PolymerBases.id == models.Materials.idPolymerBase)
     if sort.direction == "DESC":
         db_materials = db_materials.order_by(attr.desc()).offset(sort.offset).limit(sort.limit).all()
     else:

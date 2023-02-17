@@ -81,7 +81,7 @@ def login(response: Response, login: str, password: str, db: Session = Depends(g
 
 
 @router.post("/logout")
-def logout(response: Response):
+def logout(response: Response, login: str | None = Cookie(default=None)):
     if not login:
         raise HTTPException(status_code=400, detail=configP.get('users', 'user_logout_error'))
     else:
@@ -92,6 +92,7 @@ def logout(response: Response):
 @router.get("/current")
 def get_current_user(login: str | None = Cookie(default=None), db: Session = Depends(get_db)):
     user_db = crud.get_user_by_login(db=db, login=login)
+
     if not user_db:
         raise HTTPException(status_code=400, detail=configP.get('users', 'user_not_found'))
     else:
