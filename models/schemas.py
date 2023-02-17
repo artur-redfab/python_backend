@@ -120,6 +120,13 @@ class ListProjects(BaseModel):
     markingDeletion: bool
 
 
+class SortProjects(BaseModel):
+    sortBy: str = "name"
+    direction: str = "ASC"
+    limit: int = 10
+    offset: int
+
+
 # Схемы для таблицы Makers
 class MakerName(BaseModel):
     name: str
@@ -167,6 +174,7 @@ class MakerId(BaseModel):
 class MakerList(MakerId):
     name: str
     markingDeletion: bool
+
 
 # Схемы для таблицы polumerBases
 class PolymerBases(BaseModel):
@@ -216,10 +224,6 @@ class MaterialFeatures(Material):
     class Config:
         orm_mode = True
 
-
-class SortProjects(BaseModel):
-    limit: int = 10
-    offset: int
 
 class SortMaterials(BaseModel):
     limit: int = 0

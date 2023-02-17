@@ -185,7 +185,7 @@ def show_project(db: Session, project_id: int):
 
 def get_projects(sort: schemas.SortProjects, db: Session):
     if not hasattr(models.Projects, sort.sortBy):
-        return JSONResponse(status_code=400, content="Sort error")
+        return JSONResponse(status_code=200, content=configP.get('projects', 'sort_error'))
     attr = getattr(models.Projects, sort.sortBy)
     db_query = db.query(
         models.Projects.id,
