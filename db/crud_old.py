@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from starlette.responses import JSONResponse
 from sqlalchemy.orm import Session
 from starlette.responses import JSONResponse
-from models import schemas, models
+from db import schemas, models
 from routers.materials import configP
 
 

@@ -2,8 +2,8 @@ from fastapi import APIRouter, Cookie, Response, Depends, HTTPException
 from sqlalchemy.orm import Session
 from starlette.responses import JSONResponse
 
-from models import crud, schemas
-from models.database import get_db
+from db import crud_old, schemas
+from db.database import get_db
 from configparser import ConfigParser
 
 configP = ConfigParser()
