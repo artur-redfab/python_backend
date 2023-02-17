@@ -1,12 +1,8 @@
 import hashlib
-from datetime import datetime
-from sqlalchemy import text
-from sqlalchemy.orm import Session
-from starlette.responses import JSONResponse
 from sqlalchemy.orm import Session
 from starlette.responses import JSONResponse
 from db import schemas, models
-from routers.materials import configP
+from components.materials.routersMaterials import configP
 
 
 def get_color(db: Session, id: int):

@@ -4,13 +4,8 @@ from db import models
 from db.database import engine
 from components.colors.routersColors import router as colors_routers
 from components.users.routersUsers import router as user_routers
-from routers.projects import router as project_routers
-from routers.materials import router as materials_routers
-from routers.polymerbases import router as polymerBases_routers
-from routers.makers import router as makers_routers
-from routers.vacuumSystem import router as vacuumSystem_routers
-
-
+from components.materials.routersMaterials import router as materials_routers
+from components.makers.routersMakers import router as makers_routers
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
@@ -23,7 +18,7 @@ async def pong():
 # color api
 #app.include_router(colors_routers)
 # users api
-app.include_router(user_routers)
+#app.include_router(user_routers)
 ## project api
 #app.include_router(project_routers)
 ## vacuumSystem api
@@ -33,7 +28,7 @@ app.include_router(user_routers)
 ## materials api
 #app.include_router(materials_routers)
 ## makers api
-#app.include_router(makers_routers)
+app.include_router(makers_routers)
 
 
 if __name__ == "__main__":
