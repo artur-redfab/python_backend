@@ -5,7 +5,7 @@ from .database import Base
 from sqlalchemy.orm import relationship
 
 
-class Color(Base):
+class Colors(Base):
     __tablename__ = "colors"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
@@ -13,27 +13,27 @@ class Color(Base):
     # Column(Integer, ForeignKey("user.id"))
     # owner = relationship("User", back_populates="items")
     composite = Column(Boolean())
-    colorMaterialRGB = Column(Integer)
-    colorPointRGB = Column(Integer)
+    colorMaterialHEX = Column(String)
+    colorPointHEX = Column(String)
     markingDeletion = Column(Boolean())
 
 
-class ColorCreate(Base):
-    __tablename__ = "colors"
-    pass
+# class ColorCreate(Base):
+#     __tablename__ = "colors"
+#     pass
 
 
 # class ColorUpdate(Base):
 #     __tablename__ = "colors"
 #     pass
-
-class ColorUpdate(Base):
-    __tablename__ = "colors"
-    name: str
-    additionalCleaning: bool
-
-    class Config:
-        orm_mode = True
+#
+# class ColorUpdate(Base):
+#     __tablename__ = "colors"
+#     name: str
+#     additionalCleaning: bool
+#
+#     class Config:
+#         orm_mode = True
 
 
 # Модель Users

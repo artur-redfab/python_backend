@@ -1,5 +1,4 @@
 from datetime import datetime
-from pydantic import BaseModel
 from pydantic import BaseModel, Field
 
 
@@ -21,6 +20,11 @@ class ColorUpdate(ColorBase):
 
 
 class Color(ColorBase):
+    def __init__(__pydantic_self__, **data: Any):
+        super().__init__(data)
+        __pydantic_self__.composite = None
+        __pydantic_self__.colorMaterialHEX = None
+
     id: int
     name: str
 
