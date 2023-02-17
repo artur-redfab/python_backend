@@ -1,6 +1,6 @@
 import hashlib
 
-from sqlalchemy import text
+from sqlalchemy import text, false
 from sqlalchemy.orm import Session
 
 from models import schemas, models
@@ -10,28 +10,40 @@ def get_color(db: Session, id: int):
     return db.query(models.Color).filter(models.Color.id == id).first()
 
 
+def get_color_by_id(db: Session, id: int):
+    db_color = db.query(models.Colors).filter(models.Colors.id == id).first()
+    return db_color
+
+
 def get_colors(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Color).offset(skip).limit(limit).all()
 
 
-def create_color(db: Session, color: schemas.ColorCreate):
-    db_color = models.Color(email=color.name, additionalCleaning=color.additionalCleaning)
+def create_color(db: Session, color: schemas.Color):
+    colorPointHEX = hex(int("ff", 16) - int(color.colorMaterialHEX, 16))
+    db_color = models.Colors(
+        name=color.name,
+        additionalCleaning=color.additionalCleaning,
+        colorMaterialHEX=color.colorMaterialHEX,
+        colorPointHEX=colorPointHEX,
+        markingDeletion=false,
+        composite=color.composite
+    )
     db.add(db_color)
     db.commit()
     db.refresh(db_color)
     return db_color
 
 
-# def set_color(db: Session, id: int):
-#     db_color = db.query(models.Color).filter(models.Color.id == id).first()
-#     db_color.update({'name': '12345'})
-#     db.commit()
-#     # db.refresh(db_color)
-#     return db_color
-
-def set_color(db: Session, id: int, name: str):
-    update_color = db.query(models.Color).filter(models.Color.id == id).first()
-    update_color.name = name
+def set_color(db: Session, id: int, new_color_data: schemas.Color):
+    colorPointHEX = hex(int("ff", 16) - int(new_color_data.colorMaterialHEX, 16))
+    db_color = get_color_by_id(db=db, id=id)
+    db_color.name = new_color_data.name
+    db_color.composite = new_color_data.composite
+    db_color.additionalCleaning = new_color_data.additionalCleaning
+    db_color.colorMaterialHEX = new_color_data.colorMaterialHEX
+    db_color.colorPointHEX = colorPointHEX
+    db_color.markingDeletion = new_color_data.markingDeletion
     db.commit()
 
 
