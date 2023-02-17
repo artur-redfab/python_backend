@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from starlette.responses import JSONResponse
 
-from db import crud_old, schemas
+from components.projects import crud, schemas
 from db.database import get_db
 from configparser import ConfigParser
 

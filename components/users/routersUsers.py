@@ -81,7 +81,7 @@ def login(response: Response, login: str, password: str, db: Session = Depends(g
 
 
 @router.post("/logout")
-def logout(response: Response, login: str | None = Cookie(default=None)):
+def logout(response: Response):
     if not login:
         raise HTTPException(status_code=400, detail=configP.get('users', 'user_logout_error'))
     else:

@@ -1,11 +1,9 @@
 import datetime
 from sqlalchemy import DateTime
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Numeric
-from .database import Base
-from sqlalchemy.orm import relationship
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
+from db.database import Base
 
 
-# Модель Projects
 class Projects(Base):
     __tablename__ = "projects"
 
@@ -29,22 +27,4 @@ class Priorities(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, unique=True, nullable=False)
-
-
-# Модель polymerBases
-class PolymerBases(Base):
-    __tablename__ = "polymerBases"
-
-    id = Column(Integer, primary_key=True, index=True, nullable=False)
-    name = Column(String, nullable=False)
-
-
-class VacuumSystem(Base):
-    __tablename__ = "vacuumSystem"
-
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String)
-    ip = Column(String)
-    port = Column(Integer)
-    markingDeletion = Column(Boolean, default=False)
 
