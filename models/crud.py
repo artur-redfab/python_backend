@@ -149,22 +149,7 @@ def create_project(db: Session, project: schemas.CreateProject):
     db.add(db_project)
     db.commit()
     db.refresh(db_project)
-    query = db.query(
-        models.Projects.id,
-        models.Projects.name,
-        models.Projects.idPriority,
-        models.Projects.createDate,
-        models.Projects.deadLine,
-        models.Projects.changeDate,
-        models.Projects.orderNumber,
-        models.Projects.idPartner,
-        models.Projects.idResponsible,
-        models.Users.name.label('author'),
-        # models.ProjectStatusHistory.idProjectStatus # TODO!!!!
-        models.Projects.comment,
-        models.Projects.markingDeletion
-    ).join(models.Users, models.Users.id == models.Projects.idAuthor) \
-        .filter(models.Projects.id == db_project.id).first()
+    query = get_project_features(db=db, project_id=db_project.id)
     return query
 
 
@@ -219,3 +204,23 @@ def get_projects(sort: schemas.SortProjects, db: Session):
     else:
         db_query = db_query.order_by(attr.asc()).offset(sort.offset).limit(sort.limit).all()
     return db_query
+
+
+def get_project_features(project_id: int, db: Session):
+    query = db.query(
+        models.Projects.id,
+        models.Projects.name,
+        models.Projects.idPriority,
+        models.Projects.createDate,
+        models.Projects.deadLine,
+        models.Projects.changeDate,
+        models.Projects.orderNumber,
+        models.Projects.idPartner,
+        models.Projects.idResponsible,
+        models.Users.name.label('author'),
+        # models.ProjectStatusHistory.idProjectStatus # TODO!!!!
+        models.Projects.comment,
+        models.Projects.markingDeletion
+    ).join(models.Users, models.Users.id == models.Projects.idAuthor) \
+        .filter(models.Projects.id == project_id).first()
+    return query

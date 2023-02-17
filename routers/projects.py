@@ -51,22 +51,29 @@ def get_projects_list(sort: schemas.SortProjects, db: Session = Depends(get_db))
     return crud.get_projects(db=db, sort=sort)
 
 
-@router.get("/features/{id}")
-def get_features():
-    pass
+@router.get("/features/{id}", response_model=schemas.CreatedProject)
+def get_features(id: int, db: Session = Depends(get_db)):
+    db_project = crud.get_project_by_id(project_id=id, db=db)
+    if not db_project:
+        raise HTTPException(status_code=404, detail='По GUID не найден')
+    else:
+        return crud.get_project_features(project_id=id, db=db)
 
 
 @router.post("/taskList/{id}")
 def get_project_list():
+    # TODO: нет модели таблицы tasks
     pass
 
 
 @router.put("/set/{id}")
 def set_status():
+    # TODO: нет модели таблицы projectStatus
     pass
 
 
 @router.post("/createPrototype/{id}")
 def create_prototype():
+    # TODO: нет модели таблицы prototypes
     pass
 

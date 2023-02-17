@@ -83,7 +83,7 @@ class CreatedProject(BaseModel):
     idPriority: str
     createDate: datetime
     deadLine: datetime
-    changeDate: datetime
+    changeDate: datetime | None
     orderNumber: str
     idPartner: str
     idResponsible: str
