@@ -21,5 +21,6 @@ def create(db: Session, task: schemas.CreatingChangingTask):
     db.add(new_task)
     db.commit()
     db.refresh(new_task)
-    return new_task.id
+    query = db.query(models.Tasks.id).filter(models.Tasks.id == new_task.id).first()
+    return query
 

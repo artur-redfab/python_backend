@@ -1,4 +1,3 @@
-from datetime import datetime
 from pydantic import BaseModel
 
 
@@ -11,16 +10,16 @@ class IdTask(BaseModel):
 
 class CreatingChangingTask(BaseModel):
     name: str
-    idProject: str = "22"
+    idProject: str = "1"
     idPriority: str = "1"
     numberCopies: int = 1
-    planPrintTime: str | None = "03:00:00"
+    planPrintTime: str = "03:00:00"
     twoExtrPrint: bool
-    idBasicMaterial: str = "5"
-    idSupportMaterial: str | None
+    idBasicMaterial: str = "1"
+    idSupportMaterial: str = "1"
     idBasicColor: str = "1"
     idSupportColor: str = "1"
-    idOperGroup: str | None
+    idOperGroup: str = "1"
     volume: int = 3
 
     class Config:
@@ -52,3 +51,4 @@ class IdTask(BaseModel):
 
     class Config:
         orm_mode = True
+

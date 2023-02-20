@@ -16,7 +16,7 @@ router = APIRouter(
 )
 
 
-@router.post("/create", response_model=schemas.IdTask)
+@router.post("/create", status_code=200)
 def create(task: schemas.CreatingChangingTask, db: Session = Depends(get_db)):
     return crud.create(db=db, task=task)
 
