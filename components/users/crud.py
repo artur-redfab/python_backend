@@ -1,45 +1,8 @@
 import hashlib
-
-from sqlalchemy import text
 from sqlalchemy.orm import Session
-
-from models import schemas, models
-
-
-def get_color(db: Session, id: int):
-    return db.query(models.Color).filter(models.Color.id == id).first()
+from components.users import schemas, models
 
 
-def get_colors(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.Color).offset(skip).limit(limit).all()
-
-
-def create_color(db: Session, color: schemas.ColorCreate):
-    db_color = models.Color(email=color.name, additionalCleaning=color.additionalCleaning)
-    db.add(db_color)
-    db.commit()
-    db.refresh(db_color)
-    return db_color
-
-
-# def set_color(db: Session, id: int):
-#     db_color = db.query(models.Color).filter(models.Color.id == id).first()
-#     db_color.update({'name': '12345'})
-#     db.commit()
-#     # db.refresh(db_color)
-#     return db_color
-
-def set_color(db: Session, id: int, name: str):
-    update_color = db.query(models.Color).filter(models.Color.id == id).first()
-    update_color.name = name
-    db.commit()
-
-
-def get_features(id: int, db: Session):
-    return db.query(models.Color).filter(models.Color.id == id).first()
-
-
-# методы для работы с моделью Users
 def create_user(db: Session, user: schemas.User):
     passwordHash = str(hashlib.md5(str.encode(user.password, encoding='utf-8')).hexdigest())
     db_user = models.Users(
@@ -66,7 +29,6 @@ def get_user_by_login(db: Session, login: str):
     return db_user
 
 
-# Уточнить по универсальности метода, он возвращает не все поля БД
 def get_users(db: Session, user_id=None):
     if user_id:
         db_users = db.query(
@@ -109,13 +71,13 @@ def change_user(db: Session, user_id: int, new_user_data: schemas.User):
 
 def hide_user(db: Session, user_id: int):
     db_user = get_user_by_id(db=db, user_id=user_id)
-    db_user.markingDelete = True
+    db_user.markingDeletion = True
     db.commit()
 
 
 def show_user(db: Session, user_id: int):
     db_user = get_user_by_id(db=db, user_id=user_id)
-    db_user.markingDelete = False
+    db_user.markingDeletion = False
     db.commit()
 
 
@@ -130,5 +92,4 @@ def get_features_by_user_id(db: Session, user_id: int):
         models.Users.markingDeletion
     ).filter(models.Users.id == user_id).first()
     return db_user
-
 
