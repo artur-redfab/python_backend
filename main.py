@@ -2,13 +2,13 @@ import uvicorn
 from fastapi import FastAPI
 from components.vacuumSystem import models
 from db.database import engine
-from components.colors.routersColors import router as colors_routers
-from components.users.routersUsers import router as user_routers
-from components.materials.routersMaterials import router as materials_routers
-from components.projects.routersProjects import router as projects_routers
-from components.vacuumSystem.routersVacuumSystem import router as vacuumSystem_routers
-from components.polymerBases.routersPolymerBases import router as polymerBases_routers
-from components.makers.routersMakers import router as makers_routers
+from components.colors.routers import router as colors_routers
+from components.users.routers import router as user_routers
+from components.materials.routers import router as materials_routers
+from components.projects.routers import router as projects_routers
+from components.vacuumSystem.routers import router as vacuumSystem_routers
+from components.polymerBases.routers import router as polymerBases_routers
+from components.makers.routers import router as makers_routers
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
