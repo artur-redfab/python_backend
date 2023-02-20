@@ -1,8 +1,12 @@
+from configparser import ConfigParser
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from models import crud, schemas
-from models.database import get_db
-from configparser import ConfigParser
+
+from components.colors import crud
+from components.colors import schemas
+from db.database import get_db
+
 # instantiate
 configP = ConfigParser()
 # parse existing file

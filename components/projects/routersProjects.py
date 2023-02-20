@@ -1,8 +1,13 @@
-from fastapi import APIRouter, Cookie, Response, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from models import crud, schemas
-from models.database import get_db
-import hashlib
+from starlette.responses import JSONResponse
+
+from components.projects import crud, schemas
+from db.database import get_db
+from configparser import ConfigParser
+
+configP = ConfigParser()
+configP.read('messages.ini')
 
 
 router = APIRouter(
@@ -20,30 +25,30 @@ def create_project(project: schemas.CreateProject, db: Session = Depends(get_db)
 def change_project(project: schemas.ChangeProject, id: int, db: Session = Depends(get_db)):
     db_project = crud.get_project_by_id(project_id=id, db=db)
     if not db_project:
-        raise HTTPException(status_code=404, detail='По GUID не найден')
+        raise HTTPException(status_code=404, detail=configP.get('projects', 'project_not_found'))
     else:
         crud.change_project(db=db, new_project_data=project, project_id=id)
-        return {"message": "Изменен"}
+        return JSONResponse(status_code=200, content=configP.get('projects', 'project_changed_success'))
 
 
 @router.delete("/delete/{id}", status_code=200)
 def hide_project(id: int, db: Session = Depends(get_db)):
     db_project = crud.get_project_by_id(project_id=id, db=db)
     if not db_project:
-        raise HTTPException(status_code=404, detail='По GUID не найден')
+        raise HTTPException(status_code=404, detail=configP.get('projects', 'project_not_found'))
     else:
         crud.hide_project(db=db, project_id=id)
-        return {"message": "Изменен"}
+        return JSONResponse(status_code=200, content=configP.get('projects', 'project_deleted'))
 
 
 @router.patch("/undelete/{id}", status_code=200)
 def show_project(id: int, db: Session = Depends(get_db)):
     db_project = crud.get_project_by_id(project_id=id, db=db)
     if not db_project:
-        raise HTTPException(status_code=404, detail='По GUID не найден')
+        raise HTTPException(status_code=404, detail=configP.get('projects', 'project_not_found'))
     else:
         crud.show_project(db=db, project_id=id)
-        return {"message": "Изменен"}
+        return JSONResponse(status_code=200, content=configP.get('projects', 'project_undeleted'))
 
 
 @router.post("/list", response_model=list[schemas.ListProjects])
@@ -55,7 +60,7 @@ def get_projects_list(sort: schemas.SortProjects, db: Session = Depends(get_db))
 def get_features(id: int, db: Session = Depends(get_db)):
     db_project = crud.get_project_by_id(project_id=id, db=db)
     if not db_project:
-        raise HTTPException(status_code=404, detail='По GUID не найден')
+        raise HTTPException(status_code=404, detail=configP.get('projects', 'project_not_found'))
     else:
         return crud.get_project_features(project_id=id, db=db)
 
