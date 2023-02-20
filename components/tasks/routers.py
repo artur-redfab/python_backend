@@ -22,23 +22,43 @@ def create(task: schemas.CreatingChangingTask, db: Session = Depends(get_db)):
 
 
 @router.put("/change/{id}")
-def change():
-    pass
+def change(id: int, task: schemas.CreatingChangingTask, db: Session = Depends(get_db)):
+    db_task = crud.get_task_by_id(db=db, task_id=id)
+    if not db_task:
+        raise HTTPException(status_code=404, detail=configP.get('projects', 'project_not_found'))
+    else:
+        crud.change(db=db, new_task_data=task, task_id=id)
+        return JSONResponse(status_code=200, content=configP.get('projects', 'project_changed_success'))
 
 
 @router.delete("/delete/{id}")
-def hide():
-    pass
+def hide(id: int, db: Session = Depends(get_db)):
+    db_task = crud.get_task_by_id(task_id=id, db=db)
+    if not db_task:
+        raise HTTPException(status_code=404, detail=configP.get('projects', 'project_not_found'))
+    else:
+        crud.hide(db=db, task_id=id)
+        return JSONResponse(status_code=200, content=configP.get('projects', 'project_deleted'))
 
 
 @router.patch("/undelete/{id}")
-def show():
-    pass
+def show(id: int, db: Session = Depends(get_db)):
+    db_task = crud.get_task_by_id(task_id=id, db=db)
+    if not db_task:
+        raise HTTPException(status_code=404, detail=configP.get('projects', 'project_not_found'))
+    else:
+        crud.show(db=db, task_id=id)
+        return JSONResponse(status_code=200, content=configP.get('projects', 'project_undeleted'))
 
 
-@router.get("/features/{id}")
-def get_features():
-    pass
+@router.get("/features/{id}", response_model=schemas.Task)
+def get_features(id: int, db: Session = Depends(get_db)):
+    db_task = crud.get_task_by_id(task_id=id, db=db)
+    if not db_task:
+        raise HTTPException(status_code=404, detail=configP.get('projects', 'project_not_found'))
+    else:
+        return crud.change(db=db, )
+
 
 
 @router.put("/setStatus/{id}")
