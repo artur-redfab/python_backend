@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from starlette.responses import JSONResponse
 
-from components.projects import crud, schemas
+from components.tasks import crud, schemas
 from db.database import get_db
 from configparser import ConfigParser
 
@@ -16,9 +16,9 @@ router = APIRouter(
 )
 
 
-@router.post("/create")
-def create():
-    pass
+@router.post("/create", response_model=schemas.IdTask)
+def create(task: schemas.CreatingChangingTask, db: Session = Depends(get_db)):
+    return crud.create(db=db, task=task)
 
 
 @router.put("/change/{id}")
