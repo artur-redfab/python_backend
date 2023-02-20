@@ -12,7 +12,7 @@ class Tasks(Base):
     idPriority = Column(Integer, ForeignKey('priorities.id'), nullable=False)
     numberCopies = Column(Integer, nullable=False)
     planPrintTime = Column(Interval, nullable=False)
-    factPrintTime = Column(Interval, nullable=False)
+    factPrintTime = Column(Interval)
     idOperGroup = Column(Integer, nullable=False) # TODO: ForeignKey(""), nullable=False)
     twoExtrPrint = Column(Boolean, nullable=False)
     idBasicMaterial = Column(Integer, ForeignKey('materials.id'), nullable=False)
