@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Cookie, Response, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from models import crud, schemas, models
-from models.database import get_db
+from components.polymerBases import models
+from db.database import get_db
 from configparser import ConfigParser
 
 configP = ConfigParser()

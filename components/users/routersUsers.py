@@ -2,8 +2,8 @@ from fastapi import APIRouter, Cookie, Response, Depends, HTTPException
 from sqlalchemy.orm import Session
 from starlette.responses import JSONResponse
 
-from models import crud, schemas
-from models.database import get_db
+from components.users import crud, schemas
+from db.database import get_db
 import hashlib
 from configparser import ConfigParser
 
@@ -92,6 +92,7 @@ def logout(response: Response, login: str | None = Cookie(default=None)):
 @router.get("/current")
 def get_current_user(login: str | None = Cookie(default=None), db: Session = Depends(get_db)):
     user_db = crud.get_user_by_login(db=db, login=login)
+
     if not user_db:
         raise HTTPException(status_code=400, detail=configP.get('users', 'user_not_found'))
     else:
