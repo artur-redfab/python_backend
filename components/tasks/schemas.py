@@ -58,3 +58,10 @@ class IdTask(BaseModel):
     class Config:
         orm_mode = True
 
+
+class IdTaskStatus(BaseModel):
+    id: str
+
+    class Config:
+        orm_mode = True
+

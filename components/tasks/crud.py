@@ -99,3 +99,13 @@ def get_features(task_id: int, db: Session):
      .join(colors_models.Color, colors_models.Color.id == models.Tasks.idBasicColor) \
      .filter(models.Tasks.id == task_id).first()
     return query
+
+
+def change_task_status(db: Session, task_id: int, task_stat: int):
+    db_last_task = db.query(models.TaskStatusHistory).filter(models.TaskStatusHistory.idTask == task_id).order_by(models.TaskStatusHistory.id.desc()).first()
+    db_last_task.idTaskStatus = task_stat
+    db.commit()
+
+
+def change_cope_status(db: Session, task_id: int):
+    pass

@@ -60,15 +60,18 @@ def get_features(id: int, db: Session = Depends(get_db)):
         return crud.get_features(db=db, task_id=id)
 
 
-
-@router.put("/setStatus/{id}")
-def set_status():
-    pass
+@router.put("/setStatus/{id}", status_code=200)
+def set_task_status(id: int, itemNumber: int, db: Session = Depends(get_db)):
+    db_task = crud.get_task_by_id(task_id=id, db=db)
+    if not db_task:
+        raise HTTPException(status_code=404, detail=configP.get('projects', 'project_not_found'))
+    else:
+        crud.change_task_status(db=db, task_id=id, task_stat=itemNumber)
+        return JSONResponse(status_code=200, content=configP.get('projects', 'project_undeleted'))
 
 
 @router.put("/setStatusItem/{id}/{itemNumber}")
-def set_copy_status():
-    pass
+def set_copy_status(id: int, itemNumber: int, db: Session = Depends(get_db)):
 
 
 @router.post("/createFile/{id}")
