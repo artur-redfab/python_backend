@@ -79,7 +79,7 @@ def get_features(task_id: int, db: Session):
         colors_models.Color.name.label('basicColor'),
         models.Tasks.idSupportMaterial,
         materials_models.Materials.name.label('supportMaterial'),
-        models.Tasks.idSupportColorColor,
+        models.Tasks.idSupportColor,
         colors_models.Color.name.label('supportColor'),
         # TODO: idNozzleType
         # TODO: nozzleType
@@ -90,11 +90,12 @@ def get_features(task_id: int, db: Session):
         # TODO: idFile
         # TODO: nameFile
         # TODO: extFile
-        models.Tasks.volume
+        # TODO: sizeFile
+        # TODO: hashFile
+        models.Tasks.volume,
+        models.Tasks.markingDeletion
     ).join(projects_models.Projects, projects_models.Projects.id == models.Tasks.idProject)\
      .join(materials_models.Materials, materials_models.Materials.id == models.Tasks.idBasicMaterial) \
-     .join(materials_models.Materials, materials_models.Materials.id == models.Tasks.idSupportMaterial)\
-     .join(colors_models.Color, colors_models.Color.id == models.Task.idBasicColor) \
-     .join(colors_models.Color, colors_models.Color.id == models.Task.idSupportColor) \
+     .join(colors_models.Color, colors_models.Color.id == models.Tasks.idBasicColor) \
      .filter(models.Tasks.id == task_id).first()
     return query

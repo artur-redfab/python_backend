@@ -1,3 +1,5 @@
+import datetime
+
 from pydantic import BaseModel
 
 
@@ -29,12 +31,13 @@ class CreatingChangingTask(BaseModel):
 class Task(CreatingChangingTask, IdTask):
     project: str
     factPrintTime: int | None
+    planPrintTime: datetime.timedelta
     basicMaterial: str
     basicColor: str
     supportMaterial: str
     supportColor: str
     idNozzleType: str | None
-    nozzleType: str
+    nozzleType: str | None
     idNozzleSize: str | None
     nozzleSize: str | None
     operGroup: str | None
@@ -44,6 +47,9 @@ class Task(CreatingChangingTask, IdTask):
     sizeFile: int | None
     hashFile: str | None
     markingDeletion: bool
+
+    class Config:
+        orm_mode = True
 
 
 class IdTask(BaseModel):

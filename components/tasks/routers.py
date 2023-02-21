@@ -57,7 +57,7 @@ def get_features(id: int, db: Session = Depends(get_db)):
     if not db_task:
         raise HTTPException(status_code=404, detail=configP.get('projects', 'project_not_found'))
     else:
-        return crud.change(db=db, )
+        return crud.get_features(db=db, task_id=id)
 
 
 
