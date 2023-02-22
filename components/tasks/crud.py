@@ -1,9 +1,14 @@
+import hashlib
+import os
+import pathlib
+
 from sqlalchemy.orm import Session
-from starlette.responses import JSONResponse
+from fastapi import UploadFile
 from components.tasks import schemas, models
 from components.projects import models as projects_models
 from components.materials import models as materials_models
 from components.colors import models as colors_models
+from components.taskFiles import models as taskFile_models
 
 
 def create(db: Session, task: schemas.CreatingChangingTask):
@@ -101,12 +106,43 @@ def get_features(task_id: int, db: Session):
     return query
 
 
-def change_task_status(db: Session, task_id: int, task_stat: int):
-    db_last_task = db.query(models.TaskStatusHistory).filter(models.TaskStatusHistory.idTask == task_id).order_by(models.TaskStatusHistory.id.desc()).first()
-    db_last_task.idTaskStatus = task_stat
+def change_task_status(db: Session, task_id: int, task_stat: schemas.IdTaskStatus):
+    history = models.TaskStatusHistory(
+        idTask=task_id,
+        idTaskStatus=task_stat.idTaskStatus
+    )
+    db.add(history)
+    db.commit()
+    db.refresh(history)
+
+
+def get_task_copy_by_id(db: Session, id_copy: int):
+    db_copy = db.query(models.TasksCopies).filter(models.TasksCopies.id == id_copy).first()
+    return db_copy
+
+
+def change_copy_status(db: Session, copy, status: int):
+    copy.idTaskStatus = status
     db.commit()
 
 
-def change_cope_status(db: Session, task_id: int):
-    pass
+def write_file_data(db: Session, task_id: int, file_data: UploadFile):
+    db_project = db.query(projects_models.Projects).filter(projects_models.Projects.id == models.Tasks.idProject).first()
+    path = os.path.abspath(str(file_data.filename + str(' ')))
+    name, ext = os.path.splitext(file_data.filename)
+    ext = ext.split('.')[1]
+    size = 1.1
+    hash = hashlib.md5(str.encode(str(str(ext) + str(size)), encoding='utf-8')).hexdigest()
+    taskFile = taskFile_models.TaskFiles(
+        nameFile=name,
+        extFile=ext.split('.')[1],
+        idTask=task_id,
+        idOwner=db_project.idAuthor,
+        sizeFile=size,
+        hashFile=hash,
+        path=path # Верно ли берется путь?
+    )
 
+    #db.add(taskFile)
+    #db.commit()
+    db.refresh(taskFile)

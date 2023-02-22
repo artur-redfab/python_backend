@@ -5,4 +5,3 @@ from components.projects import models as projects_models
 from components.materials import models as materials_models
 from components.colors import models as colors_models
 
-

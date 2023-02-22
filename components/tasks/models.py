@@ -36,7 +36,6 @@ class TaskStatusHistory(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     period = Column(DateTime, nullable=False, default=datetime.datetime.now(tz=datetime.timezone(datetime.timedelta(hours=3), name='MSK')))
-    idPrinter = Column(Integer, nullable=False) # TODO: ForeignKey("printers.id")
     idTask = Column(Integer, ForeignKey('tasks.id'), nullable=False)
     idTaskStatus = Column(Integer, ForeignKey('taskStatuses.id'), nullable=False)
 

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, UploadFile
 from sqlalchemy.orm import Session
 from starlette.responses import JSONResponse
 
@@ -61,21 +61,32 @@ def get_features(id: int, db: Session = Depends(get_db)):
 
 
 @router.put("/setStatus/{id}", status_code=200)
-def set_task_status(id: int, itemNumber: int, db: Session = Depends(get_db)):
-    db_task = crud.get_task_by_id(task_id=id, db=db)
+def set_task_status(id: int, status: schemas.IdTaskStatus, db: Session = Depends(get_db)):
+    db_task = crud.get_task_by_id(db=db, task_id=id)
     if not db_task:
         raise HTTPException(status_code=404, detail=configP.get('tasks', 'task_not_found'))
     else:
-        crud.change_task_status(db=db, task_id=id, task_stat=itemNumber)
+        crud.change_task_status(db=db, task_id=id, task_stat=status)
         return JSONResponse(status_code=200, content=configP.get('tasks', 'task_status_change'))
 
 
-@router.put("/setStatusItem/{id}/{itemNumber}")
-def set_copy_status(id: int, itemNumber: int, db: Session = Depends(get_db)):
-    pass
+@router.put("/setStatusItem/{id_task_copy}")
+def set_copy_status(id_task_copy: int, status: int, db: Session = Depends(get_db)):
+    db_copy = crud.get_task_copy_by_id(db=db, id_copy=id_task_copy)
+    if not db_copy:
+        raise HTTPException(status_code=404, detail=configP.get('tasks', 'task_copy_not_found'))
+    else:
+        crud.change_copy_status(db=db, copy=db_copy, status=status)
+        return JSONResponse(status_code=200, content=configP.get('tasks', 'task_copy_change'))
 
 
 @router.post("/createFile/{id}")
-def create_file():
-    pass
+def create_file(file: UploadFile, id: int, db: Session = Depends(get_db)):
+    db_task = crud.get_task_by_id(db=db, task_id=id)
+    if not db_task:
+        raise HTTPException(status_code=404, detail=configP.get('tasks', 'task_not_found'))
+    else:
+        crud.write_file_data(db=db, file_data=file, task_id=id)
+
+        return file.file.read()
 

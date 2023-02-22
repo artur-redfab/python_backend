@@ -18,4 +18,3 @@ class TaskFiles(Base):
     path = Column(String, nullable=False)
     created = Column(DateTime, nullable=False, default=datetime.datetime.now(tz=datetime.timezone(datetime.timedelta(hours=3), name='MSK')))
 
-

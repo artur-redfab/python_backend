@@ -60,8 +60,5 @@ class IdTask(BaseModel):
 
 
 class IdTaskStatus(BaseModel):
-    id: str
-
-    class Config:
-        orm_mode = True
+    idTaskStatus: str
 

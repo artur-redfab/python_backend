@@ -28,3 +28,6 @@ ALTER TABLE IF EXISTS public.tasks
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
+
+ALTER TABLE IF EXISTS public."taskStatusHistory" DROP CONSTRAINT IF EXISTS "taskStatusHistory_idPrinter_fkey";
+ALTER TABLE IF EXISTS public."taskStatusHistory" DROP COLUMN IF EXISTS "idPrinter";
