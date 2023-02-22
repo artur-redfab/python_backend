@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from sqlalchemy.orm import Session
 from starlette.responses import JSONResponse
 
@@ -80,13 +80,18 @@ def set_copy_status(id_task_copy: int, status: int, db: Session = Depends(get_db
         return JSONResponse(status_code=200, content=configP.get('tasks', 'task_copy_change'))
 
 
-@router.post("/createFile/{id}")
-def create_file(file: UploadFile, id: int, db: Session = Depends(get_db)):
-    db_task = crud.get_task_by_id(db=db, task_id=id)
-    if not db_task:
-        raise HTTPException(status_code=404, detail=configP.get('tasks', 'task_not_found'))
-    else:
-        crud.write_file_data(db=db, file_data=file, task_id=id)
+#@router.post("/createFile/{id}")
+#def create_file(file: UploadFile, id: int, db: Session = Depends(get_db)):
+#    db_task = crud.get_task_by_id(db=db, task_id=id)
+#    if not db_task:
+#        raise HTTPException(status_code=404, detail=configP.get('tasks', 'task_not_found'))
+#    else:
+#        crud.write_file_data(db=db, file_data=file, task_id=id)
+#
+#        return file.file.read()
 
-        return file.file.read()
+
+@router.post("/createFile/{id}")
+def create_file(file: bytes = File()):
+    return {"file_size": f'{len(file)/1000000} Mb'}
 
