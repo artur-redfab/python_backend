@@ -8,11 +8,10 @@ from components.priorities.models import Priorities
 class Projects(Base):
     __tablename__ = "projects"
 
-    tz = datetime.timezone(datetime.timedelta(hours=3), name='MSK')
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, unique=True, nullable=False)
-    idPriority = Column(Integer, ForeignKey('priorities.id'), nullable=False) # FK!!!!!
-    createDate = Column(DateTime, nullable=False, default=datetime.datetime.now(tz=tz))
+    idPriority = Column(Integer, ForeignKey('priorities.id'), nullable=False)
+    createDate = Column(DateTime, nullable=False, default=datetime.datetime.now(tz=datetime.timezone(datetime.timedelta(hours=3), name='MSK')))
     deadLine = Column(DateTime, nullable=False)
     changeDate = Column(DateTime)
     orderNumber = Column(String, nullable=False)

@@ -65,10 +65,14 @@ def get_features(id: int, db: Session = Depends(get_db)):
         return crud.get_project_features(project_id=id, db=db)
 
 
-@router.post("/taskList/{id}")
-def get_project_list():
-    # TODO: нет модели таблицы tasks
-    pass
+@router.post("/taskList/{id}", response_model=list[schemas.TasksList])
+def get_project_list(id: int, sort: schemas.SortProjects, db: Session = Depends(get_db)):
+    db_project = crud.get_project_by_id(db=db, project_id=id)
+    if not db_project:
+        raise HTTPException(status_code=404, detail=configP.get('projects', 'project_not_found'))
+    else:
+
+        return {"dsw": "anything"}
 
 
 @router.put("/set/{id}")
