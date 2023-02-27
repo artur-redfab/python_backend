@@ -34,7 +34,7 @@ def change(id: int, task: schemas.CreatingChangingTask, db: Session = Depends(ge
         return JSONResponse(status_code=200, content=configP.get('tasks', 'task_changed_success'))
 
 
-@router.delete("/delete/{id}")
+@router.delete("/delete/{id}", status_code=200)
 def hide(id: int, db: Session = Depends(get_db)):
     db_task = crud.get_task_by_id(task_id=id, db=db)
     if not db_task:
