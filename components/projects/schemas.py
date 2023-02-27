@@ -65,17 +65,6 @@ class SortProjects(BaseModel):
     offset: int
 
 
-class TasksList(BaseModel):
-    id: str
-    name: str
-    numberCopies: int
-    operGroup: str | None
-    basicMaterial: str
-    basicColorHEX: str
-    nozzleType: str | None
-    nozzleSize: str | None
-    planPrintTime: int
-    factPrintTime: int
-    volume: int
-    markingDeletion: bool
+class IdProjectStatus(BaseModel):
+    idProjectStatus: str
 
