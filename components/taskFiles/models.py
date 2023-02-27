@@ -1,5 +1,5 @@
 import datetime
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Interval, DateTime, Numeric
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Numeric
 from components.tasks.models import Tasks
 from components.users.models import Users
 from db.database import Base

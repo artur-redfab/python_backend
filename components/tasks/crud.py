@@ -1,14 +1,8 @@
-import hashlib
-import os
-import pathlib
-
 from sqlalchemy.orm import Session
-from fastapi import UploadFile
 from components.tasks import schemas, models
 from components.projects import models as projects_models
 from components.materials import models as materials_models
 from components.colors import models as colors_models
-from components.taskFiles import models as taskFile_models
 
 
 def create(db: Session, task: schemas.CreatingChangingTask):
@@ -126,23 +120,3 @@ def change_copy_status(db: Session, copy, status: int):
     db.commit()
 
 
-def write_file_data(db: Session, task_id: int, file_data: UploadFile):
-    db_project = db.query(projects_models.Projects).filter(projects_models.Projects.id == models.Tasks.idProject).first()
-    path = os.path.abspath(str(file_data.filename + str(' ')))
-    name, ext = os.path.splitext(file_data.filename)
-    ext = ext.split('.')[1]
-    size = 1.1
-    hash = hashlib.md5(str.encode(str(str(ext) + str(size)), encoding='utf-8')).hexdigest()
-    taskFile = taskFile_models.TaskFiles(
-        nameFile=name,
-        extFile=ext.split('.')[1],
-        idTask=task_id,
-        idOwner=db_project.idAuthor,
-        sizeFile=size,
-        hashFile=hash,
-        path=path # Верно ли берется путь?
-    )
-
-    #db.add(taskFile)
-    #db.commit()
-    db.refresh(taskFile)
