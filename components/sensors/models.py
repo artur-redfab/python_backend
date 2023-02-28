@@ -4,33 +4,12 @@ import enum
 from sqlalchemy import DateTime
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Enum
 from db.database import Base
-from components.operGroups import models
-from components.stands import models
-from components.vacuumSystem import models
-from components.nozzles import models
 
 
 class SensorDataType(enum.Enum):
-    chamberTemp = int
-    chamberTempSet = int
-    doorError = bool
-    doorStatus = int
-    filmbroachError = bool
-    filmbroachStatus = bool
-    hotend1Temp = int
-    hotend1TempSet = int
-    hotend2Temp = int
-    hotend2TempSet = int
-    positionX = int
-    positionY = int
-    positionZ = int
-    rpiTemp = int
-    tableTemp = int
-    tableTempSet = int
-    ventRadiator1 = bool
-    ventRadiator2 = bool
-    ventZonePrinting = int
-    ventZoneRemovalParts = bool
+    boolean = "boolean"
+    string = "string"
+    int = "int"
 
 
 class Sensors(Base):
@@ -38,12 +17,12 @@ class Sensors(Base):
 
     id = Column(Integer, primary_key=True, nullable=False)
     name = Column(String, unique=True, nullable=False)
-    nameIdentifer = Column(String, nullable=False)
+    nameIdentifier = Column(String, nullable=False)
     idSensorGroup = Column(Integer, ForeignKey('sensorGroups.id'))
     dataType = Column(Enum(SensorDataType), nullable=False)
     description = Column(String, nullable=False)
     requiredUsed = Column(Boolean, nullable=False)
-    сanDeactivate = Column(Boolean, nullable=False, default=False)
+    canDeactivate = Column(Boolean, nullable=False, default=False)
 
 
 class SensorsInPrinters(Base):
