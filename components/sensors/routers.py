@@ -11,8 +11,26 @@ configP.read('messages.ini')
 
 
 router = APIRouter(
-    prefix='/hs/printer',
-    tags=['printer']
+    prefix='/hs/sensor',
+    tags=['sensor']
 )
 
 
+@router.post('/list')
+def get_sensors():
+    pass
+
+
+@router.get('/groups')
+def get_groups():
+    pass
+
+
+@router.get('/features/{id}')
+def get_features():
+    pass
+
+
+@router.post('/data/{id}')
+def get_sensors_history()
+    pass
