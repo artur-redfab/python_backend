@@ -62,3 +62,21 @@ class IdTask(BaseModel):
 class IdTaskStatus(BaseModel):
     idTaskStatus: str
 
+
+class TasksList(BaseModel):
+    id: str
+    name: str
+    numberCopies: int
+    operGroup: str | None
+    basicMaterial: str
+    basicColorHEX: str
+    nozzleType: str | None
+    nozzleSize: str | None
+    planPrintTime: datetime.timedelta
+    factPrintTime: int | None
+    volume: int
+    markingDeletion: bool
+
+    class Config:
+        orm_mode = True
+
