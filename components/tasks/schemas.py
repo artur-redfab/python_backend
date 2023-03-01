@@ -67,10 +67,10 @@ class TasksList(BaseModel):
     id: str
     name: str
     numberCopies: int
-    operGroup: str | None
+    operGroup: str
     basicMaterial: str
     basicColorHEX: str
-    nozzleType: str | None
+    nozzleType: str
     nozzleSize: str | None
     planPrintTime: datetime.timedelta
     factPrintTime: int | None
