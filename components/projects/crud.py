@@ -171,9 +171,3 @@ def create_project_prototype(project, db: Session):
         db.commit()
         db.refresh(new_task)
 
-
-
-
-
-
-

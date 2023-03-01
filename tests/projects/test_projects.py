@@ -24,4 +24,3 @@ def test_projects_get_features():
                 "markingDeletion": False
             }
 
-
