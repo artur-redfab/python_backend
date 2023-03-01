@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from starlette.responses import JSONResponse
 
 from components.projects import crud, schemas
+from components.tasks import schemas as tasks_schemas
 from db.database import get_db
 from configparser import ConfigParser
 
@@ -65,20 +66,31 @@ def get_features(id: int, db: Session = Depends(get_db)):
         return crud.get_project_features(project_id=id, db=db)
 
 
-@router.post("/taskList/{id}")
-def get_project_list():
-    # TODO: нет модели таблицы tasks
-    pass
+@router.post("/taskList/{id}", response_model=list[tasks_schemas.TasksList])
+def get_project_list(id: int, sort: schemas.SortProjects, db: Session = Depends(get_db)):
+    db_project = crud.get_project_by_id(db=db, project_id=id)
+    if not db_project:
+        raise HTTPException(status_code=404, detail=configP.get('projects', 'project_not_found'))
+    else:
+        return crud.get_tasks_by_project_id(prj_id=id, sort=sort, db=db)
 
 
-@router.put("/set/{id}")
-def set_status():
-    # TODO: нет модели таблицы projectStatus
-    pass
+@router.put("/set/{id}", status_code=200)
+def set_status(id: int, status: schemas.IdProjectStatus, db: Session = Depends(get_db)):
+    db_project = crud.get_project_by_id(db=db, project_id=id)
+    if not db_project:
+        raise HTTPException(status_code=404, detail=configP.get('projects', 'project_not_found'))
+    else:
+        crud.change_project_status(db=db, prj_id=id, prj_stat=status)
+        return JSONResponse(status_code=200, content=configP.get('projects', 'project_status_change'))
 
 
-@router.post("/createPrototype/{id}")
-def create_prototype():
-    # TODO: нет модели таблицы prototypes
-    pass
+@router.post("/createPrototype/{id}", status_code=200)
+def create_prototype(id: int, db: Session = Depends(get_db)):
+    db_project = crud.get_project_by_id(db=db, project_id=id)
+    if not db_project:
+        raise HTTPException(status_code=404, detail=configP.get('projects', 'project_not_found'))
+    else:
+        crud.create_project_prototype(db=db, project=db_project)
+        return JSONResponse(status_code=200, content=configP.get('projects', 'project_prototype_created'))
 

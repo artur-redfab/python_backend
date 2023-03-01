@@ -64,3 +64,7 @@ class SortProjects(BaseModel):
     limit: int = 10
     offset: int
 
+
+class IdProjectStatus(BaseModel):
+    idProjectStatus: str
+

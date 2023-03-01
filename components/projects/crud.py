@@ -2,6 +2,9 @@ from sqlalchemy.orm import Session
 from starlette.responses import JSONResponse
 from components.users import models as users_models
 from components.projects import schemas, models
+from components.tasks import models as tasks_models
+from components.materials import models as materials_models
+from components.colors import models as colors_models
 from components.materials.routers import configP
 
 
@@ -94,4 +97,83 @@ def get_project_features(project_id: int, db: Session):
     ).join(users_models.Users, users_models.Users.id == models.Projects.idAuthor) \
         .filter(models.Projects.id == project_id).first()
     return query
+
+
+def get_tasks_by_project_id(prj_id: int, sort: schemas.SortProjects, db: Session):
+    if not hasattr(tasks_models.Tasks, sort.sortBy):
+        return JSONResponse(status_code=200, content=configP.get('tasks', 'sort_error'))
+    attr = getattr(tasks_models.Tasks, sort.sortBy)
+    db_tasks = db.query(
+        tasks_models.Tasks.id,
+        tasks_models.Tasks.name,
+        tasks_models.Tasks.numberCopies,
+        # TODO: operGroup
+        materials_models.Materials.name.label('basicMaterial'),
+        colors_models.Color.colorMaterialHEX.label('basicColorHEX'),
+        # TODO: nozzleType
+        # TODO: nozzleSize
+        tasks_models.Tasks.planPrintTime,
+        tasks_models.Tasks.factPrintTime,
+        tasks_models.Tasks.volume,
+        tasks_models.Tasks.markingDeletion
+    ).filter(tasks_models.Tasks.idProject == prj_id)\
+     .join(materials_models.Materials, materials_models.Materials.id == tasks_models.Tasks.idBasicMaterial)\
+     .join(colors_models.Color, colors_models.Color.id == tasks_models.Tasks.idBasicColor)
+    # TODO: .join(nozzleType.)
+    if sort.direction == "DESC":
+        db_tasks = db_tasks.order_by(attr.desc()).offset(sort.offset).limit(sort.limit).all()
+    else:
+        db_tasks = db_tasks.order_by(attr.asc()).offset(sort.offset).limit(sort.limit).all()
+    return db_tasks
+
+
+def change_project_status(prj_id: int, prj_stat: schemas.IdProjectStatus, db: Session):
+    history = models.ProjectStatusHistory(
+        idProject=prj_id,
+        idProjectStatus=prj_stat.idProjectStatus
+    )
+    db.add(history)
+    db.commit()
+    db.refresh(history)
+
+
+def create_project_prototype(project, db: Session):
+    prototype = models.Projects(
+        name=str(project.name) + '_prototype',
+        idPriority=1,
+        deadLine=project.deadLine,
+        orderNumber=project.orderNumber,
+        idPartner=project.idPartner,
+        idResponsible=project.idResponsible,
+        idAuthor=project.idAuthor,
+        comment=project.comment
+    )
+    db.add(prototype)
+    db.commit()
+    db.refresh(prototype)
+    db_project_tasks = db.query(tasks_models.Tasks).filter(tasks_models.Tasks.idProject == project.id).all()
+    for i in range(len(db_project_tasks)):
+        new_task = tasks_models.Tasks(
+            name=str(db_project_tasks[i].name) + '_prototype',  # Нужен ли тут постфикс?
+            idProject=prototype.id,
+            idPriority=prototype.idPriority,
+            numberCopies=1,
+            planPrintTime=db_project_tasks[i].planPrintTime,
+            twoExtrPrint=db_project_tasks[i].twoExtrPrint,
+            idBasicMaterial=db_project_tasks[i].idBasicMaterial,
+            idSupportMaterial=db_project_tasks[i].idSupportMaterial,
+            idBasicColor=db_project_tasks[i].idBasicColor,
+            idSupportColor=db_project_tasks[i].idSupportColor,
+            idOperGroup=db_project_tasks[i].idOperGroup,
+            volume=db_project_tasks[i].volume
+        )
+        db.add(new_task)
+        db.commit()
+        db.refresh(new_task)
+
+
+
+
+
+
 
