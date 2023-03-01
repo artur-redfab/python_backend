@@ -12,6 +12,7 @@ from components.makers.routers import router as makers_routers
 from components.tasks.routers import router as tasks_routers
 from components.printers.routers import router as printers_routers
 from components.sensors.routers import router as sensors_routers
+from components.partners.routers import router as partners_routers
 
 
 models.Base.metadata.create_all(bind=engine)
@@ -43,6 +44,8 @@ app.include_router(tasks_routers)
 app.include_router(printers_routers)
 # sensors api
 app.include_router(sensors_routers)
+# partners api
+app.include_router(partners_routers)
 
 if __name__ == "__main__":
     uvicorn.run(app, host='127.0.0.1', port=8005)
