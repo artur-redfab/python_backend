@@ -2,6 +2,7 @@ import datetime
 from sqlalchemy import DateTime
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
 from db.database import Base
+from components.priorities.models import Priorities
 
 
 class Projects(Base):
@@ -20,11 +21,4 @@ class Projects(Base):
     idAuthor = Column(Integer, ForeignKey('users.id'), nullable=False)
     comment = Column(String)
     markingDeletion = Column(Boolean, nullable=False, default=False)
-
-
-class Priorities(Base):
-    __tablename__ = "priorities"
-
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, unique=True, nullable=False)
 

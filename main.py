@@ -9,7 +9,9 @@ from components.projects.routers import router as projects_routers
 from components.vacuumSystem.routers import router as vacuumSystem_routers
 from components.polymerBases.routers import router as polymerBases_routers
 from components.makers.routers import router as makers_routers
+from components.tasks.routers import router as tasks_routers
 from components.printers.routers import router as printers_routers
+
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
@@ -34,6 +36,8 @@ app.include_router(polymerBases_routers)
 app.include_router(materials_routers)
 # makers api
 app.include_router(makers_routers)
+# tasks api
+app.include_router(tasks_routers)
 # printers api
 app.include_router(printers_routers)
 
