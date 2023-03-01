@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 
-class CreatePartner(BaseModel):
+class CreateChangePartner(BaseModel):
     name: str
     inn: str
     kpp: str
@@ -14,3 +14,16 @@ class IdPartner(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class SortPartners(BaseModel):
+    sortBy: str = "name"
+    direction: str = "ASC"
+    limit: int = 10
+    offset: int
+
+
+class ListPartners(IdPartner, CreateChangePartner):
+    markingDeletion: bool
+
+

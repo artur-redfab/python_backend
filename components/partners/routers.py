@@ -17,32 +17,58 @@ router = APIRouter(
 )
 
 
-@router.post('/create', response_model=schemas.IdPartner)
-def create_partner(base: schemas.CreatePartner, db: Session = Depends(get_db)) -> schemas.IdPartner:
+@router.post('/create')
+def create_partner(
+        base: schemas.CreateChangePartner, db: Session = Depends(get_db)
+) -> schemas.IdPartner:
     return crud.create_partner(db=db, partner=base)
 
 
-@router.put('/change/{id}')
-def change_partner():
-    pass
+@router.put('/change/{id}', status_code=200)
+def change_partner(id: int, base: schemas.CreateChangePartner, db: Session = Depends(get_db)):
+    db_partner = crud.get_partner_by_id(db=db, id=id)
+    if not db_partner:
+        raise HTTPException(status_code=404, detail=configP.get('partners', 'partner_not_found'))
+    else:
+        crud.change_partner(db=db, partner_id=id, partner=base)
+        return JSONResponse(status_code=200, content=configP.get('partners', 'partner_changed_success'))
 
 
-@router.delete('/delete/{id}')
-def hide_partner():
-    pass
+@router.delete('/delete/{id}', status_code=200)
+def hide_partner(id: int, db: Session = Depends(get_db)):
+    db_partner = crud.get_partner_by_id(db=db, id=id)
+    if not db_partner:
+        raise HTTPException(status_code=404, detail=configP.get('partners', 'partner_not_found'))
+    else:
+        crud.hide_partner(db=db, partner=db_partner)
+        return JSONResponse(status_code=200, content=configP.get('partners', 'partner_deleted'))
 
 
 @router.patch('/undelete/{id}')
-def show_partner():
-    pass
+def show_partner(id: int, db: Session = Depends(get_db)):
+    db_partner = crud.get_partner_by_id(db=db, id=id)
+    if not db_partner:
+        raise HTTPException(status_code=404, detail=configP.get('partners', 'partner_not_found'))
+    else:
+        crud.show_partner(db=db, partner=db_partner)
+        return JSONResponse(status_code=200, content=configP.get('partners', 'partner_undeleted'))
 
 
 @router.post('/list')
-def list_partners():
-    pass
+def get_partners_list(
+        sort: schemas.SortPartners, db: Session = Depends(get_db)
+) -> list[schemas.ListPartners]:
+    return crud.get_projects(db=db, sort=sort)
 
 
 @router.get('/features/{id}')
-def get_features():
-    pass
+def get_features(
+        id: int, db: Session = Depends(get_db)
+) -> schemas.ListPartners:
+    db_partner = crud.get_partner_by_id(db=db, id=id)
+    if not db_partner:
+        raise HTTPException(status_code=404, detail=configP.get('partners', 'partner_not_found'))
+    else:
+        return db_partner
+
 
