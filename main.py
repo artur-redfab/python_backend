@@ -2,7 +2,7 @@ import uvicorn
 from fastapi import FastAPI
 from components.vacuumSystem import models
 from db.database import engine
-from components.colors.routers import router as colors_routers
+# from components.colors.routers import router as colors_routers
 from components.users.routers import router as user_routers
 from components.materials.routers import router as materials_routers
 from components.projects.routers import router as projects_routers
@@ -10,6 +10,8 @@ from components.vacuumSystem.routers import router as vacuumSystem_routers
 from components.polymerBases.routers import router as polymerBases_routers
 from components.makers.routers import router as makers_routers
 from components.tasks.routers import router as tasks_routers
+from components.printers.routers import router as printers_routers
+
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
@@ -21,7 +23,7 @@ async def pong():
 
 
 # color api
-app.include_router(colors_routers)
+# app.include_router(colors_routers)
 # users api
 app.include_router(user_routers)
 # project api
@@ -36,7 +38,8 @@ app.include_router(materials_routers)
 app.include_router(makers_routers)
 # tasks api
 app.include_router(tasks_routers)
-
+# printers api
+app.include_router(printers_routers)
 
 if __name__ == "__main__":
     uvicorn.run(app, host='127.0.0.1', port=8005)
