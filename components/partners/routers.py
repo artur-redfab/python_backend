@@ -17,10 +17,8 @@ router = APIRouter(
 )
 
 
-@router.post('/create')
-def create_partner(
-        base: schemas.CreateChangePartner, db: Session = Depends(get_db)
-) -> schemas.IdPartner:
+@router.post('/create', response_model=schemas.IdPartner)
+def create_partner(base: schemas.CreateChangePartner, db: Session = Depends(get_db)):
     return crud.create_partner(db=db, partner=base)
 
 
@@ -54,10 +52,8 @@ def show_partner(id: int, db: Session = Depends(get_db)):
         return JSONResponse(status_code=200, content=configP.get('partners', 'partner_undeleted'))
 
 
-@router.post('/list')
-def get_partners_list(
-        sort: schemas.SortPartners, db: Session = Depends(get_db)
-) -> list[schemas.ListPartners]:
+@router.post('/list', response_model=list[schemas.ListPartners])
+def get_partners_list(sort: schemas.SortPartners, db: Session = Depends(get_db)):
     return crud.get_projects(db=db, sort=sort)
 
 

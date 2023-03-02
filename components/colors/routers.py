@@ -18,17 +18,13 @@ router = APIRouter(
 )
 
 
-@router.post("/create")
-def create_color(
-        color: schemas.ColorCreate, db: Session = Depends(get_db)
-) -> schemas.Color:
+@router.post("/create", response_model=schemas.Color)
+def create_color(color: schemas.ColorCreate, db: Session = Depends(get_db)):
     return crud.create_color(db=db, color=color)
 
 
-@router.patch("/change/{id}")
-def change_color(
-        id: int, color: schemas.ColorUpdate, db: Session = Depends(get_db)
-) -> schemas.ColorUpdate:
+@router.patch("/change/{id}", response_model=schemas.ColorUpdate)
+def change_color(id: int, color: schemas.ColorUpdate, db: Session = Depends(get_db)):
     db_color = crud.get_color(db, id=id)
     if not db_color:
         raise HTTPException(status_code=400, detail=config.get('colors', 'color_already_registered'))
@@ -36,20 +32,16 @@ def change_color(
     return crud.get_color(db=db, id=id)
 
 
-@router.delete("/delete/{id}")
-def delete_color(
-        color: schemas.ColorCreate, db: Session = Depends(get_db)
-) -> schemas.Color:
+@router.delete("/delete/{id}", response_model=schemas.Color)
+def delete_color(color: schemas.ColorCreate, db: Session = Depends(get_db)):
     db_color = crud.get_colors(db)
     if db_color:
         raise HTTPException(status_code=400, detail="Color already registered")
     return crud.create_color(db=db)
 
 
-@router.patch("/undelete/{id}")
-def undelete_color(
-        color: schemas.ColorCreate, db: Session = Depends(get_db)
-) -> schemas.Color:
+@router.patch("/undelete/{id}", response_model=schemas.Color)
+def undelete_color(color: schemas.ColorCreate, db: Session = Depends(get_db)):
     db_color = crud.set_color(db)
     if db_color:
         raise HTTPException(status_code=400, detail="Color already registered")
@@ -64,19 +56,15 @@ def get_colors(
     return colors
 
 
-@router.post("/features/{id}")
-def create_color(
-        id: int, db: Session = Depends(get_db)
-) -> schemas.Color:
+@router.post("/features/{id}", response_model=schemas.Color)
+def create_color(id: int, db: Session = Depends(get_db)):
     db_color = crud.get_features(id=id, db=db)
     if db_color:
         raise HTTPException(status_code=400, detail="Color already registered")
     return crud.create_color(db=db)
 # при создании и при изменении цвета заполняется только colorMaterialHEX а второе поле рассчитывается автоматически как "обратный цвет" - в API
-@router.post("/create")
-def create_user(
-        user: schemas.User, db: Session = Depends(get_db)
-) -> schemas.UserBase:
+@router.post("/create", response_model=schemas.UserBase)
+def create_user(user: schemas.User, db: Session = Depends(get_db)):
     return crud.create_user(db=db, user=user)
 
 
