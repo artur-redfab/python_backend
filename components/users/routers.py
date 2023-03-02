@@ -18,8 +18,10 @@ router = APIRouter(
 )
 
 
-@router.post("/create", response_model=schemas.UserBase)
-def create_user(user: schemas.User, db: Session = Depends(get_db)):
+@router.post("/create")
+def create_user(
+        user: schemas.User, db: Session = Depends(get_db)
+) -> schemas.UserBase:
     return crud.create_user(db=db, user=user)
 
 
