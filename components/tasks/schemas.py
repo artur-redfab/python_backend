@@ -36,16 +36,16 @@ class Task(CreatingChangingTask, IdTask):
     basicColor: str
     supportMaterial: str
     supportColor: str
-    idNozzleType: str | None
-    nozzleType: str | None
-    idNozzleSize: str | None
-    nozzleSize: str | None
-    operGroup: str | None
-    idFile: str | None
-    nameFile: str | None
-    extFile: str | None
-    sizeFile: int | None
-    hashFile: str | None
+    idNozzleType: str
+    nozzleType: str
+    idNozzleSize: str
+    nozzleSize: str
+    operGroup: str
+    idFile: str
+    nameFile: str
+    extFile: str
+    sizeFile: int
+    hashFile: str
     markingDeletion: bool
 
     class Config:
