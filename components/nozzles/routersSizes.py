@@ -1,8 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from starlette.responses import JSONResponse
-
-from components.makers import crud, schemas
+from components.nozzles import crud, schemas
 from db.database import get_db
 from configparser import ConfigParser
 
@@ -16,16 +14,16 @@ router = APIRouter(
 )
 
 
-@router.get('/list')
-def get_list_nozzles_sizes(
-
-):
-    pass
+@router.get('/list', response_model=list[schemas.NozzleSizesBase])
+def get_nozzles_types_list(db: Session = Depends(get_db)):
+    return crud.get_sizes_list(db=db)
 
 
-@router.get('/features/{id}')
-def get_features(
-
-):
-    pass
+@router.get('/features/{id}', response_model=schemas.NozzleSizesBase)
+def get_features(id: int, db: Session = Depends(get_db)):
+    db_size = crud.get_size_by_id(id=id, db=db)
+    if not db_size:
+        raise HTTPException(status_code=404, detail=configP.get('nozzles', 'nozzle_size_not_found'))
+    else:
+        return db_size
 

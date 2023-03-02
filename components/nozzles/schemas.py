@@ -15,10 +15,11 @@ class NozzleTypesFeatures(NozzleTypesBase):
 
 
 class NozzleSizesBase(BaseModel):
-    id: int
-    nozzlesSize: int
+    id: str
+    nozzlesSize: float
     compositesPrinting: bool
 
     class Config:
         orm_mode = True
+
 

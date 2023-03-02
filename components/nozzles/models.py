@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, Integer, String
+from sqlalchemy import Boolean, Column, Integer, String, Numeric
 from db.database import Base
 
 
@@ -16,5 +16,5 @@ class NozzleSizes(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     compositesPrinting = Column(Boolean, default=False)
-    nozzlesSize = Column(Integer)
+    nozzlesSize = Column(Numeric(3, 7), nullable=False)
 
