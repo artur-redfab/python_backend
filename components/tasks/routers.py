@@ -54,8 +54,10 @@ def show(id: int, db: Session = Depends(get_db)):
         return JSONResponse(status_code=200, content=configP.get('tasks', 'task_undeleted'))
 
 
-@router.get("/features/{id}", response_model=schemas.Task)
-def get_features(id: int, db: Session = Depends(get_db)):
+@router.get("/features/{id}")
+def get_features(
+        id: int, db: Session = Depends(get_db)
+) -> schemas.Task:
     db_task = crud.get_task_by_id(task_id=id, db=db)
     if not db_task:
         raise HTTPException(status_code=404, detail=configP.get('tasks', 'task_not_found'))

@@ -16,8 +16,10 @@ router = APIRouter(
 )
 
 
-@router.post("/create", response_model=schemas.CreatePrinter)
-def create_printer(printer: schemas.CreatePrinter, db: Session = Depends(get_db)):
+@router.post("/create")
+def create_printer(
+        printer: schemas.CreatePrinter, db: Session = Depends(get_db)
+) -> schemas.CreatePrinter:
     return crud.create_printer(db=db, printer=printer)
 
 
@@ -51,13 +53,17 @@ def show_project(id: int, db: Session = Depends(get_db)):
         return JSONResponse(status_code=200, content=configP.get('projects', 'project_undeleted'))
 
 
-@router.post("/list", response_model=list[schemas.ListProjects])
-def get_projects_list(sort: schemas.SortProjects, db: Session = Depends(get_db)):
+@router.post("/list")
+def get_projects_list(
+        sort: schemas.SortProjects, db: Session = Depends(get_db)
+) -> list[schemas.ListProjects]:
     return crud.get_projects(db=db, sort=sort)
 
 
-@router.get("/features/{id}", response_model=schemas.CreatedPrinter)
-def get_features(id: int, db: Session = Depends(get_db)):
+@router.get("/features/{id}")
+def get_features(
+        id: int, db: Session = Depends(get_db)
+) -> schemas.CreatedPrinter:
     db_printer = crud.get_printer_by_id(printer_id=id, db=db)
     if not db_printer:
         raise HTTPException(status_code=404, detail=configP.get('printers', 'printer_not_found'))

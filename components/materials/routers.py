@@ -15,8 +15,10 @@ router = APIRouter(
 )
 
 
-@router.post("/create", response_model=schemas.MaterialId)
-def create_material(material: schemas.Material, db: Session = Depends(get_db)):
+@router.post("/create")
+def create_material(
+        material: schemas.Material, db: Session = Depends(get_db)
+) -> schemas.MaterialId:
     return crud.create_material(db=db, material=material)
 
 
@@ -56,8 +58,10 @@ def get_materials_list(sort: schemas.SortMaterials, db: Session = Depends(get_db
     return materials
 
 
-@router.get("/features/{id}", response_model=schemas.MaterialFeatures)
-def get_features(id: int, db: Session = Depends(get_db)):
+@router.get("/features/{id}")
+def get_features(
+        id: int, db: Session = Depends(get_db)
+) -> schemas.MaterialFeatures:
     db_material = crud.get_material_by_id(db=db, mat_id=id)
     if not db_material:
         raise HTTPException(status_code=404, detail=configP.get('materials', 'material_not_found'))
