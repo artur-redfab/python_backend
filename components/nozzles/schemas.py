@@ -2,13 +2,16 @@ from pydantic import BaseModel
 
 
 class NozzleTypesBase(BaseModel):
-    id: int
+    id: str
     name: str
-    tempIncrease: int
-    compositesPrinting: bool
 
     class Config:
         orm_mode = True
+
+
+class NozzleTypesFeatures(NozzleTypesBase):
+    tempIncrease: int
+    compositesPrinting: bool
 
 
 class NozzleSizesBase(BaseModel):
