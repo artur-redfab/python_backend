@@ -1,4 +1,8 @@
-from pydantic import BaseModel
+from fastapi import HTTPException
+from pydantic import BaseModel, validator
+
+from components.makers.routers import configP
+from components.operGroups import crud
 
 
 class IdOperGroup(BaseModel):
@@ -40,4 +44,10 @@ class OperGroupList(IdOperGroup):
     idNozzleSize: str
     markingDeletion: bool
 
+    class Config:
+        orm_mode = True
+
+
+class AddPrinter(BaseModel):
+    id: int
 

@@ -84,3 +84,4 @@ class SortProjects(BaseModel):
     direction: str = "ASC"
     limit: int = 10
     offset: int
+
