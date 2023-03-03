@@ -2,7 +2,7 @@ from fastapi import APIRouter, Cookie, Response, Depends, HTTPException
 from sqlalchemy.orm import Session
 from starlette.responses import JSONResponse
 
-from components.users import crud, schemas
+from components.operGroups import crud, schemas
 from db.database import get_db
 import hashlib
 from configparser import ConfigParser
@@ -18,9 +18,9 @@ router = APIRouter(
 )
 
 
-@router.post('/create')
-def create():
-    pass
+@router.post('/create', response_model=schemas.IdOperGroup)
+def create(base: schemas.CreateChangeOperGroup, db: Session = Depends(get_db)):
+    return crud.create(db=db, opergroup=base)
 
 
 @router.put('/change/{id}')
@@ -53,7 +53,7 @@ def get_printer_list():
     pass
 
 
-@router.put('/addPrinters/{id}')
+@router.put('/addPrinter/{id}')
 def add_printers():
     pass
 
