@@ -5,6 +5,9 @@ from components.projects import schemas, models
 from components.tasks import models as tasks_models
 from components.materials import models as materials_models
 from components.colors import models as colors_models
+from components.partners import models as partners_models
+from components.operGroups import models as opergroups_models
+from components.nozzles import models as nozzles_models
 from components.materials.routers import configP
 
 
@@ -65,13 +68,13 @@ def get_projects(sort: schemas.SortProjects, db: Session):
         models.Projects.idPriority,
         models.Projects.orderNumber,
         models.Projects.idPartner,
-        # TODO: models.Partners.name.label('partner')
+        partners_models.Partners.name.label('partner'),
         models.Projects.idResponsible,
         users_models.Users.name.label('responsible'),
         models.Projects.markingDeletion
     ) \
-        .join(users_models.Users, users_models.Users.id == models.Projects.idResponsible)
-    # TODO: .join(models.Partners, models.Partners.id == models.Project.idPartner)
+        .join(users_models.Users, users_models.Users.id == models.Projects.idResponsible)\
+        .join(partners_models.Partners, partners_models.Partners.id == models.Projects.idPartner)
     if sort.direction == "DESC":
         db_query = db_query.order_by(attr.desc()).offset(sort.offset).limit(sort.limit).all()
     else:
@@ -91,7 +94,7 @@ def get_project_features(project_id: int, db: Session):
         models.Projects.idPartner,
         models.Projects.idResponsible,
         users_models.Users.name.label('author'),
-        # models.ProjectStatusHistory.idProjectStatus # TODO!!!!
+        models.ProjectStatusHistory.idProjectStatus,
         models.Projects.comment,
         models.Projects.markingDeletion
     ).join(users_models.Users, users_models.Users.id == models.Projects.idAuthor) \
@@ -107,19 +110,21 @@ def get_tasks_by_project_id(prj_id: int, sort: schemas.SortProjects, db: Session
         tasks_models.Tasks.id,
         tasks_models.Tasks.name,
         tasks_models.Tasks.numberCopies,
-        # TODO: operGroup
+        opergroups_models.OperGroups.name.label('operGroup'),
         materials_models.Materials.name.label('basicMaterial'),
         colors_models.Color.colorMaterialHEX.label('basicColorHEX'),
-        # TODO: nozzleType
-        # TODO: nozzleSize
+        nozzles_models.NozzleTypes.name.label('nozzleType'),
+        nozzles_models.NozzleSizes.nozzlesSize.label('nozzleSize'),
         tasks_models.Tasks.planPrintTime,
         tasks_models.Tasks.factPrintTime,
         tasks_models.Tasks.volume,
         tasks_models.Tasks.markingDeletion
     ).filter(tasks_models.Tasks.idProject == prj_id)\
      .join(materials_models.Materials, materials_models.Materials.id == tasks_models.Tasks.idBasicMaterial)\
-     .join(colors_models.Color, colors_models.Color.id == tasks_models.Tasks.idBasicColor)
-    # TODO: .join(nozzleType.)
+     .join(colors_models.Color, colors_models.Color.id == tasks_models.Tasks.idBasicColor)\
+     .join(opergroups_models.OperGroups, opergroups_models.OperGroups.id == tasks_models.Tasks.idOperGroup)\
+     .join(nozzles_models.NozzleTypes, nozzles_models.NozzleTypes.id == opergroups_models.OperGroups.idNozzleType)\
+     .join(nozzles_models.NozzleSizes, nozzles_models.NozzleSizes.id == opergroups_models.OperGroups.idNozzleSize)
     if sort.direction == "DESC":
         db_tasks = db_tasks.order_by(attr.desc()).offset(sort.offset).limit(sort.limit).all()
     else:

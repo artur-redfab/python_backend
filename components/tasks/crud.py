@@ -3,6 +3,9 @@ from components.tasks import schemas, models
 from components.projects import models as projects_models
 from components.materials import models as materials_models
 from components.colors import models as colors_models
+from components.nozzles import models as nozzles_models
+from components.operGroups import models as opergroups_models
+from components.taskFiles import models as taskfiles_models
 
 
 def create(db: Session, task: schemas.CreatingChangingTask):
@@ -80,22 +83,26 @@ def get_features(task_id: int, db: Session):
         materials_models.Materials.name.label('supportMaterial'),
         models.Tasks.idSupportColor,
         colors_models.Color.name.label('supportColor'),
-        # TODO: idNozzleType
-        # TODO: nozzleType
-        # TODO: idNozzleSize
-        # TODO: nozzleSize
+        nozzles_models.NozzleTypes.id.label('idNozzleType'),
+        nozzles_models.NozzleTypes.name.label('nozzleType'),
+        nozzles_models.NozzleSizes.id.label('idNozzleSize'),
+        nozzles_models.NozzleSizes.nozzlesSize.label('nozzleSize'),
         models.Tasks.idOperGroup,
-        # TODO: operGroups_models.OperGroups.name.label('operGroup')
-        # TODO: idFile
-        # TODO: nameFile
-        # TODO: extFile
-        # TODO: sizeFile
-        # TODO: hashFile
+        opergroups_models.OperGroups.name.label('operGroup'),
+        taskfiles_models.TaskFiles.id.label('idFile'),
+        taskfiles_models.TaskFiles.nameFile,
+        taskfiles_models.TaskFiles.extFile,
+        taskfiles_models.TaskFiles.sizeFile,
+        taskfiles_models.TaskFiles.hashFile,
         models.Tasks.volume,
         models.Tasks.markingDeletion
     ).join(projects_models.Projects, projects_models.Projects.id == models.Tasks.idProject)\
      .join(materials_models.Materials, materials_models.Materials.id == models.Tasks.idBasicMaterial) \
      .join(colors_models.Color, colors_models.Color.id == models.Tasks.idBasicColor) \
+     .join(opergroups_models.OperGroups, opergroups_models.OperGroups.id == models.Tasks.idOperGroup) \
+     .join(nozzles_models.NozzleTypes, nozzles_models.NozzleTypes.id == opergroups_models.OperGroups.idNozzleType) \
+     .join(nozzles_models.NozzleSizes, nozzles_models.NozzleSizes.id == opergroups_models.OperGroups.idNozzleSize) \
+     .join(taskfiles_models.TaskFiles, taskfiles_models.TaskFiles.idTask == models.Tasks.id) \
      .filter(models.Tasks.id == task_id).first()
     return query
 
@@ -118,5 +125,4 @@ def get_task_copy_by_id(db: Session, id_copy: int):
 def change_copy_status(db: Session, copy, status: int):
     copy.idTaskStatus = status
     db.commit()
-
 
