@@ -13,8 +13,9 @@ from components.tasks.routers import router as tasks_routers
 from components.printers.routers import router as printers_routers
 from components.sensors.routers import router as sensors_routers
 from components.partners.routers import router as partners_routers
+from components.nozzles.routersTypes import router as nozzletypes_routers
+from components.nozzles.routersSizes import router as nozzlesizes_routers
 from components.packing.routers import router as packing_routers
-
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
@@ -47,6 +48,10 @@ app.include_router(printers_routers)
 app.include_router(sensors_routers)
 # partners api
 app.include_router(partners_routers)
+# nozzleTypes api
+app.include_router(nozzletypes_routers)
+# nozzleSizes api
+app.include_router(nozzlesizes_routers)
 # packing api
 app.include_router(packing_routers)
 
