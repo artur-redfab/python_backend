@@ -15,10 +15,8 @@ router = APIRouter(
 )
 
 
-@router.post("/create")
-def create_maker(
-        maker: schemas.MakerName, db: Session = Depends(get_db)
-) -> schemas.MakerId:
+@router.post("/create", response_model=schemas.MakerId)
+def create_maker(maker: schemas.MakerName, db: Session = Depends(get_db)):
     return crud.create_maker(db=db, maker=maker)
     return JSONResponse(status_code=200, content=configP.get('makers', 'maker_created_success'))
 
