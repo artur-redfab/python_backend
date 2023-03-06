@@ -15,7 +15,7 @@ class Projects(Base):
     deadLine = Column(DateTime, nullable=False)
     changeDate = Column(DateTime)
     orderNumber = Column(String, nullable=False)
-    idPartner = Column(Integer) #, ForeignKey('partners.id'), nullable=False)
+    idPartner = Column(Integer, ForeignKey('partners.id'), nullable=False)
     idResponsible = Column(Integer, ForeignKey('users.id'), nullable=False)
     idAuthor = Column(Integer, ForeignKey('users.id'), nullable=False)
     comment = Column(String)
@@ -36,3 +36,4 @@ class ProjectStatusHistory(Base):
     period = Column(DateTime, nullable=False, default=datetime.datetime.now(tz=datetime.timezone(datetime.timedelta(hours=3), name='MSK')))
     idProject = Column(Integer, ForeignKey('projects.id'), nullable=False)
     idProjectStatus = Column(Integer, ForeignKey('projectStatuses.id'), nullable=False)
+

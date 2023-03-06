@@ -1,6 +1,7 @@
 import datetime
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Interval, DateTime, Numeric
 from db.database import Base
+from components.operGroups import models
 
 
 class Tasks(Base):
@@ -13,7 +14,7 @@ class Tasks(Base):
     numberCopies = Column(Integer, nullable=False)
     planPrintTime = Column(Interval, nullable=False)
     factPrintTime = Column(Interval)
-    idOperGroup = Column(Integer, nullable=False) # TODO: ForeignKey(""), nullable=False)
+    idOperGroup = Column(Integer, ForeignKey("operGroups.id"), nullable=False)
     twoExtrPrint = Column(Boolean, nullable=False)
     idBasicMaterial = Column(Integer, ForeignKey('materials.id'), nullable=False)
     idBasicColor = Column(Integer, ForeignKey('colors.id'), nullable=False)

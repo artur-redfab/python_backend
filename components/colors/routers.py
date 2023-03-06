@@ -48,8 +48,10 @@ def undelete_color(color: schemas.ColorCreate, db: Session = Depends(get_db)):
     return crud.create_color(db=db)
 
 
-@router.get("/list", response_model=list[schemas.Color])
-def get_colors(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+@router.get("/list", )
+def get_colors(
+        skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
+) -> list[schemas.Color]:
     colors = crud.get_colors(db, skip=skip, limit=limit)
     return colors
 
