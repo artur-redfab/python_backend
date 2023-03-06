@@ -16,6 +16,7 @@ from components.partners.routers import router as partners_routers
 from components.nozzles.routersTypes import router as nozzletypes_routers
 from components.nozzles.routersSizes import router as nozzlesizes_routers
 from components.packing.routers import router as packing_routers
+from components.clusters.routers import cluster_router
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
@@ -54,6 +55,8 @@ app.include_router(nozzletypes_routers)
 app.include_router(nozzlesizes_routers)
 # packing api
 app.include_router(packing_routers)
+# clusters api
+app.include_router(cluster_router)
 
 
 if __name__ == "__main__":

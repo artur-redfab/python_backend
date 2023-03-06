@@ -17,7 +17,7 @@ class Printers(Base):
     idOperGroups = Column(Integer, ForeignKey('operGroups.id'))
     idModulePlace = Column(Integer, ForeignKey('modulePlaces.id'), nullable=False)
     idVacuumSystem = Column(Integer, ForeignKey('vacuumSystem.id'), nullable=False)
-    vacuumSystemValue = Column(String, nullable=False)
+    vacuumSystemValve = Column(String, nullable=False)
     serialNumber = Column(String, nullable=False)
     printerIP = Column(String, nullable=False)
     printerPort = Column(Integer, nullable=False)
