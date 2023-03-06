@@ -1,5 +1,4 @@
 from pydantic import BaseModel, Field
-from components.stands import schemas
 
 
 class CreateChangeCluster(BaseModel):
