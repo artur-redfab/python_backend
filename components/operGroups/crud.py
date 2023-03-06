@@ -1,4 +1,4 @@
-from fastapi import Depends
+from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
 from starlette.responses import JSONResponse
 from components.operGroups import models, schemas
@@ -73,6 +73,11 @@ def get_printers_list(oper_group, db: Session):
     return query
 
 
-def add_printer(opergroup, printer_id, db: Session):
-    printer.idOperGroup = opergroup.id
-    db.commit()
+def add_printer(opergroup_id, printer_id, db: Session):
+    printer = db.query(printers_models.Printers).filter(printers_models.Printers.id == printer_id).first()
+    if not printer:
+        raise HTTPException(status_code=404, detail=configP.get('oper_group', 'oper_group_printer_not_found'))
+    else:
+        printer.idOperGroups = opergroup_id
+        db.commit()
+

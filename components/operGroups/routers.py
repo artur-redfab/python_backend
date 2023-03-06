@@ -78,11 +78,9 @@ def get_printer_list(id: int, db: Session = Depends(get_db)):
 @router.put('/addPrinter/{id}')
 def add_printers(id: int, printer: schemas.AddPrinter, db: Session = Depends(get_db)):
     opergroup = crud.get_opergroup_by_id(id=id, db=db)
-    # TODO: printer = db.query(printers_models.Printers.id).filter(printers_models.Printers.id == printer.id).first()
-    # add exception for printer
     if not opergroup:
         raise HTTPException(status_code=404, detail=configP.get('oper_group', 'oper_group_not_found'))
     else:
-        # TODO: crud.add_printer(opergroup=opergroup, printer_id=printer, db=db)
+        crud.add_printer(opergroup_id=id, printer_id=printer.id, db=db)
         return JSONResponse(status_code=200, content=configP.get('oper_group', 'oper_group_printer_add_success'))
 
