@@ -53,5 +53,4 @@ def get_features(id: int, db: Session = Depends(get_db)):
 @cluster_router.get('/all', response_model=list[schemas.AllDataClusters])
 def get_all(db: Session = Depends(get_db)):
     return crud.get_all_info(db=db)
-# протестить с опергрупс
 
