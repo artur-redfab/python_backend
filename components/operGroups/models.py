@@ -9,8 +9,8 @@ class OperGroups(Base):
 
     id = Column(Integer, primary_key=True, index=True, nullable=False)
     name = Column(String)
-    idCluster = Column(Integer, ForeignKey('Clusters.id'), nullable=False)
+    idCluster = Column(Integer, ForeignKey('clusters.id'), nullable=False)
     idNozzleType = Column(Integer, ForeignKey('nozzleTypes.id'), nullable=False)
     idNozzleSize = Column(Integer, ForeignKey('nozzleSizes.id'), nullable=False)
-    markingDeletion = Column(Boolean, default=False)
+    markingDeletion = Column(Boolean, nullable=False, default=False)
 
